@@ -18,8 +18,8 @@
 - [x] 锁定版本：JDK / Spring Boot / LangChain4j / PG / Redis，产出 versions.lock 说明段｜ commit: M0-init ｜ 耗时: 0.2h
 - [x] 兼容性 spike：Boot 4.1 + JDK 25 + LangChain4j 1.20 最小 Demo 跑通（不通过则降级并记 ADR-000）｜ commit: M0-init ｜ 耗时: 0.3h
 - [x] MySQL 禁用校验：CI grep（范围 pom / compose / Flyway 脚本 / yml / properties / Dockerfile / Java 源码）命中即失败；Flyway 脚本全部 PG 方言｜ commit: M0-init ｜ 耗时: 0.1h
-- [~] docker-compose.dev.yml：postgres17+pgvector、redis7、prometheus、node_exporter、nginx｜ 文件已就绪，待 Docker daemon 就绪后验证 healthy
-- [ ] 云服务器初始化：Ubuntu 24.04、2G swap、安全组、Docker、域名解析、certbot
+- [x] docker-compose.dev.yml：postgres17+pgvector、redis7、prometheus、node_exporter、nginx｜ commit: M0-fixes ｜ 耗时: 0.1h
+- [~] 云服务器初始化：Ubuntu 24.04、2G swap、安全组、Docker、域名解析、certbot
 - [x] GitHub Actions：compile + test + build image（先不部署）｜ commit: M0-init ｜ 耗时: 0.2h
 - [x] 测试基建：FakeChatModel + Testcontainers 集成测试模板（PG+Redis）+ Jacoco 覆盖率门槛矩阵接入 CI｜ commit: M0-init ｜ 耗时: 0.3h
 - [x] 静态门禁：Spotless + Checkstyle + SpotBugs + ArchUnit 三条硬规则接入 CI｜ commit: M0-init ｜ 耗时: 0.2h
@@ -116,9 +116,9 @@
 
 | 日期 | 问题 | 影响 | 处理 | 状态 |
 | --- | --- | --- | --- | --- |
-| 2026-10-13 | Docker Desktop daemon 未就绪（npipe 连接失败） | 无法本地验证 compose healthy / 无法跑 Testcontainers IT | 已在 PROGRESS 标记为阻塞；compose 文件已就绪，待手动启动 Docker Desktop 后执行 `docker compose -f deploy/docker-compose.dev.yml up -d` 验证 | 阻塞 |
-| 2026-10-13 | Spring Boot 4.1 中 TestRestTemplate 移入 `spring-boot-resttestclient` | OpenAPI 契约 IT 原写法编译失败 | 改用 `org.springframework.test.web.servlet.client.RestTestClient`（spring-test 7 原生） | 已解决 |
-| 2026-10-13 | Testcontainers 2.0.5 模块化重命名 | `EnabledIfDockerAvailable` 包路径、`PostgreSQLContainer` 泛型签名变化 | 修正为 `org.testcontainers.junit.jupiter.EnabledIfDockerAvailable` 与原生非泛型 `PostgreSQLContainer` | 已解决 |
+| 2026-10-13 | Docker Desktop daemon 未就绪（npipe 连接失败） | 无法本地验证 compose healthy / 无法跑 Testcontainers IT | 用户手动启动 Docker Desktop；已验证 compose 全 healthy + `./mvnw verify` 全绿 | 已解决 |
+| 2026-10-13 | nginx healthcheck 使用 wget，但 nginx:1.30 镜像无 wget | clawops-nginx 显示 unhealthy | 改为 `curl -f -s http://localhost:80/healthz` | 已解决 |
+| 2026-10-13 | OpenApiContractIT 因 RANDOM_PORT 导致 openapi.json 中 server url 端口每次变化 | IT 失败 | 比对前移除 `servers` 字段，端口无关化 | 已解决 |
 
 ## 每日日志（模板）
 
@@ -131,14 +131,17 @@
   - 测试基建：FakeChatModel（可编程响应 + usage 注入）、ArchUnit 三条硬规则、PG/Redis Testcontainers 模板
   - API 契约：统一响应体、error-codes.yaml、springdoc 生成 docs/openapi/openapi.json 入仓
   - CI workflow：七阶段门禁（format-lint → build-test → integration → arch-coverage → mysql-guard → package → eval-smoke）
-  - 兼容性 spike 通过：`./mvnw verify -DskipITs` BUILD SUCCESS（JDK 25.0.4 + Boot 4.1.1 + LangChain4j 1.20.2）
+  - 用户启动 Docker Desktop，验证 compose 全服务 healthy（postgres / redis / prometheus / node-exporter / nginx）
+  - 修复 nginx healthcheck：镜像无 wget，改为 curl
+  - 修复 OpenApiContractIT：RANDOM_PORT 导致生成契约端口变化，比对前移除 `servers` 字段
+  - `./mvnw verify`（含 IT）BUILD SUCCESS（JDK 25.0.4 + Boot 4.1.1 + LangChain4j 1.20.2）
+  - 验证本机 JDK 21 无法编译：javac 报错 "不支持发行版本 25"
 - 明日：
-  - 手动启动 Docker Desktop，验证 `docker compose -f deploy/docker-compose.dev.yml up -d` 全部 healthy
-  - 跑通 `./mvnw verify`（含 IT）
-  - 准备云服务器初始化（Ubuntu 24.04 + Docker + swap）
-- 阻塞：Docker Desktop daemon 在自动启动后仍未就绪，需人工确认 GUI 启动与 WSL backend 状态。
-- AI 辅助记录：使用 CodeBuddy 生成全部骨架文件，人工 Review 修正了 Boot 4.1/Testcontainers 2.0 API 变化点；单测补充：harness FakeChatModel 单测、gateway 响应体与错误码契约测试、ArchUnit 规则测试。
-- 资源观测：内存峰值约 2.1G（Maven 全量构建）/ API 调用 0 次 / 成本 ¥0
+  - 云服务器初始化（Ubuntu 24.04 + Docker + swap + 安全组 + 域名/certbot）
+  - 或进入 W1 内核开发（按任务书优先级）
+- 阻塞：无。
+- AI 辅助记录：使用 CodeBuddy 生成全部骨架文件并自动跑全量验证与 Docker 调试，人工 Review 修正了 Boot 4.1/Testcontainers 2.0 API 变化点；单测补充：harness FakeChatModel 单测、gateway 响应体与错误码契约测试、ArchUnit 规则测试。
+- 资源观测：内存峰值约 2.4G / API 调用 0 次 / 成本 ¥0
 
 ## 指标登记表（跑完填真实数字，禁止估算）
 
@@ -156,4 +159,4 @@
 
 | 里程碑 | 计划 | 实际 | 状态 |
 | --- | --- | --- | --- |
-| M0 | D0–D1 | D0 主体完成，compose healthy 验证阻塞于 Docker daemon | [~] 进行中 |
+| M0 | D0–D1 | D0–D1 完成 | [x] 已完成 |

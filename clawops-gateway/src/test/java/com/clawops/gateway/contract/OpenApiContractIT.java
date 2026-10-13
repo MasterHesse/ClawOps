@@ -2,7 +2,9 @@ package com.clawops.gateway.contract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -58,7 +60,17 @@ class OpenApiContractIT {
     assertThat(COMMITTED_CONTRACT)
         .as("docs/openapi/openapi.json 不存在；先以 -Dopenapi.export=true 生成并显式提交")
         .exists();
-    assertThat(mapper.readTree(actual))
-        .isEqualTo(mapper.readTree(Files.readString(COMMITTED_CONTRACT)));
+    assertThat(normalize(mapper.readTree(actual)))
+        .isEqualTo(normalize(mapper.readTree(Files.readString(COMMITTED_CONTRACT))));
+  }
+
+  private JsonNode normalize(JsonNode node) {
+    if (!(node instanceof ObjectNode objectNode)) {
+      return node;
+    }
+    ObjectNode copy = objectNode.deepCopy();
+    // 运行时端口不参与契约比对，避免 RANDOM_PORT 导致每次比较失败
+    copy.remove("servers");
+    return copy;
   }
 }
