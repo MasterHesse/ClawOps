@@ -1,0 +1,97 @@
+name: ci
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+# 七阶段 fail-fast 门禁（conventions/quality-gates.md §3）
+# Job 7 eval-smoke（仅 tag / 上线前）在 M4 接入 clawops-cli eval run 后启用
+jobs:
+  # 1. 格式与编码规范
+  format-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - name: Spotless + Checkstyle
+        run: ./mvnw -B -ntp spotless:check checkstyle:check
+
+  # 2. 编译 + 单测（surefire）+ SpotBugs（High 阻断）
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - name: Compile + unit tests + SpotBugs
+        run: ./mvnw -B -ntp -DskipITs verify
+
+  # 3. 集成测试（failsafe + Testcontainers，runner 自带 Docker）
+  integration:
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - name: Integration tests
+        run: ./mvnw -B -ntp test-compile failsafe:integration-test failsafe:verify
+
+  # 4. 架构约束（ArchUnit，随单测）+ 覆盖率门槛（Jacoco check）
+  arch-coverage:
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - name: Unit tests + coverage check
+        run: ./mvnw -B -ntp -DskipITs test jacoco:check jacoco:report
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-reports
+          path: "**/target/site/jacoco/**"
+
+  # 5. MySQL 家族红线 grep（模式与范围见 conventions/quality-gates.md §5）
+  mysql-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: MySQL ban check
+        run: bash deploy/scripts/mysql-guard.sh
+
+  # 6. 打包（仅 main/dev；镜像构建与推送 W4 接入）
+  package:
+    runs-on: ubuntu-latest
+    needs: [format-lint, build-test, integration, arch-coverage, mysql-guard]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - name: Package (skip tests)
+        run: ./mvnw -B -ntp -DskipTests package
+      - name: Upload jars
+        uses: actions/upload-artifact@v4
+        with:
+          name: clawops-jars
+          path: "**/target/*.jar"

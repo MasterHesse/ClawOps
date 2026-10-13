@@ -1,0 +1,91 @@
+# ClawOps 开发环境基础设施（M0）
+# 约定（ADR-007）：容器数据一律 named volume，禁止 bind mount 到 Windows 路径；
+# 配置文件只读挂载不涉及数据 I/O，允许。
+# 镜像版本锁定见 docs/versions.lock.md
+# 启动：docker compose --env-file ../.env -f docker-compose.dev.yml up -d
+name: clawops-dev
+
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.7-pg17-trixie
+    container_name: clawops-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-clawops}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-clawops-dev}
+      POSTGRES_DB: ${POSTGRES_DB:-clawops}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-clawops} -d ${POSTGRES_DB:-clawops}"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4.11
+    container_name: clawops-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v3.13.4
+    container_name: clawops-prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=7d
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:9090/-/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    restart: unless-stopped
+
+  node-exporter:
+    image: prom/node-exporter:v1
+    container_name: clawops-node-exporter
+    ports:
+      - "9100:9100"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:9100/metrics || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.30
+    container_name: clawops-nginx
+    ports:
+      - "${CLAWOPS_NGINX_PORT:-8088}:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:80/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+volumes:
+  pg-data:
+  redis-data:
+  prometheus-data:

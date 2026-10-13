@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.clawops</groupId>
+    <artifactId>clawops-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>clawops-console-web</artifactId>
+  <packaging>pom</packaging>
+  <name>ClawOps :: Console Web</name>
+  <description>前端控制台（Vue 3 + Vite）：对话台、任务中心、知识库、技能、审计、评测——W2 起接入，构建产物由 Nginx 托管</description>
+</project>

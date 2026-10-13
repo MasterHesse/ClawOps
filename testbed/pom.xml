@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.clawops</groupId>
+    <artifactId>clawops-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>testbed</artifactId>
+  <packaging>pom</packaging>
+  <name>ClawOps :: Testbed</name>
+  <description>靶场（W3 落地）：order-service、inventory-service、mock-ops-system——指标要真、业务要假、故障可控（TASK_BOOK §7）</description>
+</project>

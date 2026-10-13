@@ -1,0 +1,19 @@
+# 错误码机器可读契约（conventions/api.md §3）
+# 与 com.clawops.gateway.api.ApiErrorCode 一一对应，由 ApiErrorCodeContractTest 校验一致性。
+# 一经发布只增不改不复用；degradeAction 是三阶防护降级判断依据：
+#   NONE=不可重试 | RETRY=计数重试 | DEGRADE=换工具/降级路径 | HUMAN=转人工/审批 | DROP=丢弃
+codes:
+  - { code: 0,    name: OK,                       http: 200, retryable: false, degradeAction: NONE }
+  - { code: 1001, name: INVALID_PARAM,            http: 400, retryable: false, degradeAction: NONE }
+  - { code: 1002, name: UNAUTHORIZED,             http: 401, retryable: false, degradeAction: NONE }
+  - { code: 1003, name: FORBIDDEN,                http: 403, retryable: false, degradeAction: HUMAN }
+  - { code: 1004, name: NOT_FOUND,                http: 404, retryable: false, degradeAction: NONE }
+  - { code: 1005, name: RATE_LIMITED,             http: 429, retryable: true,  degradeAction: RETRY }
+  - { code: 2001, name: TASK_STATE_CONFLICT,      http: 409, retryable: false, degradeAction: NONE }
+  - { code: 3001, name: TOOL_PARAM_INVALID,       http: 400, retryable: true,  degradeAction: RETRY }
+  - { code: 3002, name: TOOL_TIMEOUT,             http: 504, retryable: true,  degradeAction: RETRY }
+  - { code: 3003, name: TOOL_RETRY_EXHAUSTED,     http: 502, retryable: false, degradeAction: DEGRADE }
+  - { code: 3004, name: TOOL_CIRCUIT_OPEN,        http: 503, retryable: false, degradeAction: DEGRADE }
+  - { code: 4001, name: KB_PARSE_FAILED,          http: 400, retryable: false, degradeAction: NONE }
+  - { code: 5001, name: WEBHOOK_SIGNATURE_INVALID, http: 401, retryable: false, degradeAction: DROP }
+  - { code: 9001, name: INTERNAL,                 http: 500, retryable: false, degradeAction: NONE }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.clawops</groupId>
+    <artifactId>clawops-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>clawops-harness</artifactId>
+  <name>ClawOps :: Harness</name>
+  <description>自研 Agent 内核：AgentLoop / ToolRegistry / ContextManager / Permission / SubAgent / TaskStore（ADR-001：纯内核，仅经自研 SPI 与外界交互）</description>
+
+  <properties>
+    <!-- W1 起步 60%，爬坡至 80%（conventions/testing.md §4） -->
+    <jacoco.min.line-ratio>0.60</jacoco.min.line-ratio>
+  </properties>
+
+  <!-- 主代码零第三方依赖（纯内核）；langchain4j 仅存在于 test 侧的 FakeChatModel（conventions/testing.md §2） -->
+  <dependencies>
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- FakeChatModel 随 test-jar 分发给兄弟模块复用 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

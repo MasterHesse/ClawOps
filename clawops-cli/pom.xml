@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.clawops</groupId>
+    <artifactId>clawops-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>clawops-cli</artifactId>
+  <name>ClawOps :: CLI</name>
+  <description>命令行：ask / task / skill / eval / deploy（Picocli；覆盖率不设线，以 E2E 冒烟为准）</description>
+
+  <!-- 覆盖率不设线（conventions/testing.md §4），跳过 Jacoco -->
+  <properties>
+    <jacoco.skip>true</jacoco.skip>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.clawops</groupId>
+      <artifactId>clawops-harness</artifactId>
+    </dependency>
+  </dependencies>
+</project>

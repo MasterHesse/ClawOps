@@ -1,0 +1,21 @@
+# 统一 LF：shell / SQL / compose / nginx 等将在 Ubuntu 云服务器执行的文件，
+# CRLF 会导致 bash 报错与 compose 解析异常（见 ADR-007 配套约定）
+* text=auto
+*.sh text eol=lf
+*.sql text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.conf text eol=lf
+*.properties text eol=lf
+*.md text eol=lf
+*.xml text eol=lf
+*.java text eol=lf
+
+# 二进制
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
