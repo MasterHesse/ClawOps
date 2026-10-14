@@ -19,7 +19,7 @@
 - [x] 兼容性 spike：Boot 4.1 + JDK 25 + LangChain4j 1.20 最小 Demo 跑通（不通过则降级并记 ADR-000）｜ commit: M0-init ｜ 耗时: 0.3h
 - [x] MySQL 禁用校验：CI grep（范围 pom / compose / Flyway 脚本 / yml / properties / Dockerfile / Java 源码）命中即失败；Flyway 脚本全部 PG 方言｜ commit: M0-init ｜ 耗时: 0.1h
 - [x] docker-compose.dev.yml：postgres17+pgvector、redis7、prometheus、node_exporter、nginx｜ commit: M0-fixes ｜ 耗时: 0.1h
-- [~] 云服务器初始化：Ubuntu 24.04、2G swap、安全组、Docker、域名解析、certbot
+- [-] 云服务器初始化：Ubuntu 24.04、2G swap、安全组、Docker、域名解析、certbot（推迟到镜像推送到云端前）
 - [x] GitHub Actions：compile + test + build image（先不部署）｜ commit: M0-init ｜ 耗时: 0.2h
 - [x] 测试基建：FakeChatModel + Testcontainers 集成测试模板（PG+Redis）+ Jacoco 覆盖率门槛矩阵接入 CI｜ commit: M0-init ｜ 耗时: 0.3h
 - [x] 静态门禁：Spotless + Checkstyle + SpotBugs + ArchUnit 三条硬规则接入 CI｜ commit: M0-init ｜ 耗时: 0.2h
@@ -29,18 +29,18 @@
 
 ## W1 内核（M1）
 
-- [ ] clawops-harness：AgentLoop（感知-推理-行动-反馈）+ 步数/时间上限
-- [ ] ToolRegistry：注解注册、JSON Schema 生成、参数校验
-- [ ] 工具 1：metrics.query（Prometheus HTTP，真实数据）
-- [ ] 工具 2：log.search（Mock 日志接口，可注入 ERROR）
-- [ ] 重试与熔断：指数退避（≤3 次）、超时隔离、失败降级路径 + 单测
-- [ ] Permission：READ / WRITE / DANGEROUS 三级标注与拦截 + 单测
-- [ ] ContextManager：分层 Prompt 组装 + token 计数 + 阈值压缩（默认 80%，可配置）
-- [ ] 压缩效果验证：同一任务压缩前后轮数/Token 对比，写入 docs/metrics/
-- [ ] 死循环防护：重复动作检测 + 单测
-- [ ] 最小对话接口（REST + SSE 流式）+ 极简前端对话页
-- [ ] 单测覆盖率：harness ≥ 60%（按 conventions/testing.md 矩阵爬坡至 80%），CI 绿灯
-- [ ] 打 tag v0.1.0
+- [x] clawops-harness：AgentLoop（感知-推理-行动-反馈）+ 步数/时间上限｜ commit: 待提交 ｜ 耗时: 1.5h
+- [x] ToolRegistry：注解注册、JSON Schema 生成、参数校验｜ commit: 待提交 ｜ 耗时: 1.0h
+- [x] 工具 1：metrics.query（Prometheus HTTP，真实数据）｜ commit: 待提交 ｜ 耗时: 0.5h
+- [x] 工具 2：log.search（Mock 日志接口，可注入 ERROR）｜ commit: 待提交 ｜ 耗时: 0.3h
+- [x] 重试与熔断：指数退避（≤3 次）、超时隔离、失败降级路径 + 单测｜ commit: 待提交 ｜ 耗时: 0.8h
+- [x] Permission：READ / WRITE / DANGEROUS 三级标注与拦截 + 单测｜ commit: 待提交 ｜ 耗时: 0.3h
+- [x] ContextManager：分层 Prompt 组装 + token 计数 + 阈值压缩（默认 80%，可配置）｜ commit: 待提交 ｜ 耗时: 0.8h
+- [x] 压缩效果验证：同一任务压缩前后轮数/Token 对比，写入 docs/metrics/｜ commit: 待提交 ｜ 耗时: 0.3h
+- [x] 死循环防护：重复动作检测 + 单测｜ commit: 待提交 ｜ 耗时: 0.3h
+- [x] 最小对话接口（REST + SSE 流式）+ 极简前端对话页｜ commit: 待提交 ｜ 耗时: 0.8h
+- [ ] 单测覆盖率：harness ≥ 60%（按 conventions/testing.md 矩阵爬坡至 80%），CI 绿灯｜ commit: 待提交 ｜ 耗时: 0.5h
+- [ ] 打 tag v0.1.0｜ commit: 待提交 ｜ 耗时: 0.1h
 
 ## W2 持久化 + RAG（M2）
 
@@ -105,7 +105,7 @@
 | --- | --- | --- | --- |
 | ADR-000 | JDK / Boot / LangChain4j 版本锁定 | 已完成 | 2026-10-13 |
 | ADR-001 | Harness 与 LangChain4j 职责边界 | 已完成 | 2026-10-13 |
-| ADR-002 | 上下文压缩阈值与保留策略 | 待填 |  |
+| ADR-002 | 上下文压缩阈值与保留策略 | 已完成 | 2026-10-14 |
 | ADR-003 | 队列选型：Redis Stream vs 外部 MQ | 待填 |  |
 | ADR-004 | 向量方案：pgvector HNSW | 待填 |  |
 | ADR-005 | 是否引入 LangGraph 侧车 | 待填 |  |
@@ -121,6 +121,21 @@
 | 2026-10-13 | OpenApiContractIT 因 RANDOM_PORT 导致 openapi.json 中 server url 端口每次变化 | IT 失败 | 比对前移除 `servers` 字段，端口无关化 | 已解决 |
 
 ## 每日日志（模板）
+
+### 2026-10-14
+
+- 完成：
+  - 删除项目内冗余 JDK 副本（.tools/jdk-25.0.4.1+1），确认系统 JDK 25 被 Maven wrapper 使用
+  - 完成 W1 内核开发：Harness SPI、ToolRegistry、PermissionManager、RetryExecutor/CircuitBreaker、ContextManager/WindowCompressionStrategy、LoopGuard、AgentLoop
+  - 完成 W1 工具：connector 的 metrics.query（Prometheus HTTP）与 log.search（Mock 日志，可注入 ERROR）
+  - 完成 gateway 最小 SSE 对话接口 /api/v1/chat/stream 与静态 chat.html 前端页
+  - 完成 ADR-002（上下文压缩）与 docs/metrics/w1-context-compression.md（20 轮对话 token 1697→512，压缩比 30%）
+  - 更新 PROGRESS.md W1 进度、ADR 索引、每日日志
+- 明日：
+  - 跑通全量 `./mvnw verify`（含覆盖率/ArchUnit/MySQL 红线），补充缺失单测，提交并打 tag v0.1.0
+- 阻塞：无。
+- AI 辅助记录：使用 CodeBuddy 按 TDD 顺序生成 harness 核心类与单测，人工 Review 修正了反射参数名、setAccessible、跨模块依赖版本管理等问题；前端页与 SSE 由 AI 生成后人工调整。
+- 资源观测：内存峰值约 2.2G / API 调用 0 次 / 成本 ¥0
 
 ### 2026-10-13
 

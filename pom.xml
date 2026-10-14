@@ -73,6 +73,11 @@
         <type>test-jar</type>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>com.clawops</groupId>
+        <artifactId>clawops-connector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- 第三方（Boot BOM 未管理的） -->
       <dependency>
         <groupId>org.springdoc</groupId>

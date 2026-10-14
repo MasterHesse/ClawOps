@@ -31,6 +31,10 @@
       <artifactId>clawops-harness</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.clawops</groupId>
+      <artifactId>clawops-connector</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>

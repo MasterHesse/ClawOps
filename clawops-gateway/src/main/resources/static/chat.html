@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClawOps Chat</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 { color: #333; }
+    #log {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      height: 500px;
+      overflow-y: auto;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .event {
+      margin: 6px 0;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .event.delta { background: #e3f2fd; }
+    .event.tool_call { background: #fff3e0; }
+    .event.tool_result { background: #e8f5e9; }
+    .event.done { background: #f3e5f5; }
+    .event.error { background: #ffebee; color: #c62828; }
+    .meta {
+      font-size: 11px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    #controls {
+      display: flex;
+      gap: 8px;
+    }
+    #message {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      background: #1976d2;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:disabled { background: #aaa; }
+  </style>
+</head>
+<body>
+  <h1>ClawOps 智能运维助手</h1>
+  <div id="log"></div>
+  <div id="controls">
+    <input id="message" type="text" placeholder="试试：查询 CPU 指标 / 查看 ERROR 日志" autofocus>
+    <button id="send">发送</button>
+  </div>
+
+  <script>
+    const logEl = document.getElementById('log');
+    const inputEl = document.getElementById('message');
+    const sendBtn = document.getElementById('send');
+
+    function appendEvent(name, content) {
+      const div = document.createElement('div');
+      div.className = 'event ' + name;
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = '[' + name + ']';
+      div.appendChild(meta);
+      const body = document.createElement('div');
+      body.textContent = typeof content === 'object' ? JSON.stringify(content, null, 2) : content;
+      div.appendChild(body);
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function send() {
+      const text = inputEl.value.trim();
+      if (!text) return;
+      inputEl.value = '';
+      sendBtn.disabled = true;
+      appendEvent('user', text);
+
+      const evtSource = new EventSource('/api/v1/chat/stream');
+      const payload = JSON.stringify({ message: text });
+
+      fetch('/api/v1/chat/stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload
+      }).then(response => {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        function read() {
+          reader.read().then(({ done, value }) => {
+            if (done) {
+              sendBtn.disabled = false;
+              return;
+            }
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n\n');
+            buffer = lines.pop();
+            lines.forEach(parseSseChunk);
+            read();
+          }).catch(err => {
+            appendEvent('error', err.message);
+            sendBtn.disabled = false;
+          });
+        }
+        read();
+      }).catch(err => {
+        appendEvent('error', err.message);
+        sendBtn.disabled = false;
+      });
+    }
+
+    function parseSseChunk(chunk) {
+      const lines = chunk.split('\n');
+      let eventName = 'message';
+      let data = '';
+      lines.forEach(line => {
+        if (line.startsWith('event:')) {
+          eventName = line.substring(6).trim();
+        } else if (line.startsWith('data:')) {
+          data = line.substring(5).trim();
+        }
+      });
+      if (data) {
+        try {
+          appendEvent(eventName, JSON.parse(data));
+        } catch (e) {
+          appendEvent(eventName, data);
+        }
+      }
+      if (eventName === 'done') {
+        sendBtn.disabled = false;
+      }
+    }
+
+    sendBtn.addEventListener('click', send);
+    inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+  </script>
+</body>
+</html>
