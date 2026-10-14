@@ -29,18 +29,18 @@
 
 ## W1 内核（M1）
 
-- [x] clawops-harness：AgentLoop（感知-推理-行动-反馈）+ 步数/时间上限｜ commit: 待提交 ｜ 耗时: 1.5h
-- [x] ToolRegistry：注解注册、JSON Schema 生成、参数校验｜ commit: 待提交 ｜ 耗时: 1.0h
-- [x] 工具 1：metrics.query（Prometheus HTTP，真实数据）｜ commit: 待提交 ｜ 耗时: 0.5h
-- [x] 工具 2：log.search（Mock 日志接口，可注入 ERROR）｜ commit: 待提交 ｜ 耗时: 0.3h
-- [x] 重试与熔断：指数退避（≤3 次）、超时隔离、失败降级路径 + 单测｜ commit: 待提交 ｜ 耗时: 0.8h
-- [x] Permission：READ / WRITE / DANGEROUS 三级标注与拦截 + 单测｜ commit: 待提交 ｜ 耗时: 0.3h
-- [x] ContextManager：分层 Prompt 组装 + token 计数 + 阈值压缩（默认 80%，可配置）｜ commit: 待提交 ｜ 耗时: 0.8h
-- [x] 压缩效果验证：同一任务压缩前后轮数/Token 对比，写入 docs/metrics/｜ commit: 待提交 ｜ 耗时: 0.3h
-- [x] 死循环防护：重复动作检测 + 单测｜ commit: 待提交 ｜ 耗时: 0.3h
-- [x] 最小对话接口（REST + SSE 流式）+ 极简前端对话页｜ commit: 待提交 ｜ 耗时: 0.8h
-- [ ] 单测覆盖率：harness ≥ 60%（按 conventions/testing.md 矩阵爬坡至 80%），CI 绿灯｜ commit: 待提交 ｜ 耗时: 0.5h
-- [ ] 打 tag v0.1.0｜ commit: 待提交 ｜ 耗时: 0.1h
+- [x] clawops-harness：AgentLoop（感知-推理-行动-反馈）+ 步数/时间上限｜ commit: 06807d6 ｜ 耗时: 1.5h
+- [x] ToolRegistry：注解注册、JSON Schema 生成、参数校验｜ commit: 06807d6 ｜ 耗时: 1.0h
+- [x] 工具 1：metrics.query（Prometheus HTTP，真实数据）｜ commit: 06807d6 ｜ 耗时: 0.5h
+- [x] 工具 2：log.search（Mock 日志接口，可注入 ERROR）｜ commit: 06807d6 ｜ 耗时: 0.3h
+- [x] 重试与熔断：指数退避（≤3 次）、超时隔离、失败降级路径 + 单测｜ commit: 06807d6 ｜ 耗时: 0.8h
+- [x] Permission：READ / WRITE / DANGEROUS 三级标注与拦截 + 单测｜ commit: 06807d6 ｜ 耗时: 0.3h
+- [x] ContextManager：分层 Prompt 组装 + token 计数 + 阈值压缩（默认 80%，可配置）｜ commit: 06807d6 ｜ 耗时: 0.8h
+- [x] 压缩效果验证：同一任务压缩前后轮数/Token 对比，写入 docs/metrics/｜ commit: 06807d6 ｜ 耗时: 0.3h
+- [x] 死循环防护：重复动作检测 + 单测｜ commit: 06807d6 ｜ 耗时: 0.3h
+- [x] 最小对话接口（REST + SSE 流式）+ 极简前端对话页｜ commit: 06807d6 ｜ 耗时: 0.8h
+- [x] 单测覆盖率：harness ≥ 60%（按 conventions/testing.md 矩阵爬坡至 80%），CI 绿灯｜ commit: 06807d6 ｜ 耗时: 0.5h
+- [x] 打 tag v0.1.0｜ commit: 06807d6 ｜ 耗时: 0.1h
 
 ## W2 持久化 + RAG（M2）
 
