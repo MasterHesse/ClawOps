@@ -198,11 +198,27 @@
         </executions>
       </plugin>
 
-      <!-- 覆盖率门槛：Jacoco（矩阵见 conventions/testing.md §4） -->
+      <!-- 覆盖率门槛：Jacoco（矩阵见 conventions/testing.md §4）。
+           rules 置于插件级 configuration，使 `jacoco:check`（default-cli）与
+           `jacoco:check@coverage-check` 均能读到门槛，避免 CLI 调用报 rules 缺失。 -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>${jacoco-maven-plugin.version}</version>
+        <configuration>
+          <rules>
+            <rule>
+              <element>BUNDLE</element>
+              <limits>
+                <limit>
+                  <counter>LINE</counter>
+                  <value>COVEREDRATIO</value>
+                  <minimum>${jacoco.min.line-ratio}</minimum>
+                </limit>
+              </limits>
+            </rule>
+          </rules>
+        </configuration>
         <executions>
           <execution>
             <id>prepare-agent</id>
@@ -222,20 +238,6 @@
             <goals>
               <goal>check</goal>
             </goals>
-            <configuration>
-              <rules>
-                <rule>
-                  <element>BUNDLE</element>
-                  <limits>
-                    <limit>
-                      <counter>LINE</counter>
-                      <value>COVEREDRATIO</value>
-                      <minimum>${jacoco.min.line-ratio}</minimum>
-                    </limit>
-                  </limits>
-                </rule>
-              </rules>
-            </configuration>
           </execution>
         </executions>
       </plugin>
