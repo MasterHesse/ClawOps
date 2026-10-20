@@ -14,7 +14,7 @@
   <description>解析 → 切分 → 向量化 → 混合检索 → 重排 → 引用溯源（pgvector + tsvector + RRF）</description>
 
   <properties>
-    <jacoco.min.line-ratio>0.50</jacoco.min.line-ratio>
+    <jacoco.min.line-ratio>0.65</jacoco.min.line-ratio>
   </properties>
 
   <dependencies>
