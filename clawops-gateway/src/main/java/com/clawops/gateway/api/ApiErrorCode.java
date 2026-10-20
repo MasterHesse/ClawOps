@@ -15,11 +15,15 @@ public enum ApiErrorCode {
   NOT_FOUND(1004, "资源不存在"),
   RATE_LIMITED(1005, "请求过于频繁"),
   TASK_STATE_CONFLICT(2001, "任务状态冲突"),
+  TASK_NOT_RESUMABLE(2002, "任务不可恢复"),
+  APPROVAL_STATE_CONFLICT(2003, "审批状态冲突"),
   TOOL_PARAM_INVALID(3001, "工具参数非法"),
   TOOL_TIMEOUT(3002, "工具执行超时"),
   TOOL_RETRY_EXHAUSTED(3003, "工具重试耗尽"),
   TOOL_CIRCUIT_OPEN(3004, "工具熔断开启"),
   KB_PARSE_FAILED(4001, "知识库文档解析失败"),
+  KB_INGEST_FAILED(4002, "知识库灌入失败"),
+  KB_DOC_NOT_FOUND(4003, "知识库文档不存在"),
   WEBHOOK_SIGNATURE_INVALID(5001, "Webhook 签名校验失败"),
   INTERNAL(9001, "系统内部错误");
 

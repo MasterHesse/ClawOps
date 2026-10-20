@@ -10,10 +10,14 @@ codes:
   - { code: 1004, name: NOT_FOUND,                http: 404, retryable: false, degradeAction: NONE }
   - { code: 1005, name: RATE_LIMITED,             http: 429, retryable: true,  degradeAction: RETRY }
   - { code: 2001, name: TASK_STATE_CONFLICT,      http: 409, retryable: false, degradeAction: NONE }
+  - { code: 2002, name: TASK_NOT_RESUMABLE,       http: 409, retryable: false, degradeAction: NONE }
+  - { code: 2003, name: APPROVAL_STATE_CONFLICT,  http: 409, retryable: false, degradeAction: NONE }
   - { code: 3001, name: TOOL_PARAM_INVALID,       http: 400, retryable: true,  degradeAction: RETRY }
   - { code: 3002, name: TOOL_TIMEOUT,             http: 504, retryable: true,  degradeAction: RETRY }
   - { code: 3003, name: TOOL_RETRY_EXHAUSTED,     http: 502, retryable: false, degradeAction: DEGRADE }
   - { code: 3004, name: TOOL_CIRCUIT_OPEN,        http: 503, retryable: false, degradeAction: DEGRADE }
   - { code: 4001, name: KB_PARSE_FAILED,          http: 400, retryable: false, degradeAction: NONE }
+  - { code: 4002, name: KB_INGEST_FAILED,          http: 500, retryable: false, degradeAction: NONE }
+  - { code: 4003, name: KB_DOC_NOT_FOUND,         http: 404, retryable: false, degradeAction: NONE }
   - { code: 5001, name: WEBHOOK_SIGNATURE_INVALID, http: 401, retryable: false, degradeAction: DROP }
   - { code: 9001, name: INTERNAL,                 http: 500, retryable: false, degradeAction: NONE }
