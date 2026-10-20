@@ -8,7 +8,9 @@ import com.clawops.harness.spi.ToolDefinition;
 import com.clawops.harness.spi.ToolResult;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 上下文管理器。
@@ -58,6 +60,15 @@ public class ContextManager {
     return this;
   }
 
+  /** 注入历史消息（替换现有历史，断点恢复重建上下文用）。 */
+  public ContextManager withHistory(List<AgentMessage> history) {
+    this.history.clear();
+    if (history != null) {
+      this.history.addAll(history);
+    }
+    return this;
+  }
+
   public ContextManager addUserMessage(String content) {
     history.add(AgentMessage.user(content));
     return this;
@@ -98,6 +109,34 @@ public class ContextManager {
 
   public int historySize() {
     return history.size();
+  }
+
+  /**
+   * 移除尾部未配对 tool result 的 assistant(toolCalls) 消息。
+   *
+   * <p>审批暂停时，模型已请求调用 DANGEROUS 工具（assistant toolCalls 消息入栈）但结果未回填； 断点恢复重建上下文后模型会重新发起调用，此时
+   * ApprovalGate 按已批准的 approval 放行。 已配对的（assistant toolCalls + 对应 tool result 均在历史中）保留。详见 ADR-008。
+   */
+  public ContextManager trimUnresolvedToolCalls() {
+    Set<String> resolvedIds = new HashSet<>();
+    for (AgentMessage m : history) {
+      if (m.role() == AgentMessage.Role.TOOL && m.toolCallId() != null) {
+        resolvedIds.add(m.toolCallId());
+      }
+    }
+    int i = history.size() - 1;
+    while (i >= 0) {
+      AgentMessage m = history.get(i);
+      if (m.role() == AgentMessage.Role.ASSISTANT
+          && m.hasToolCalls()
+          && m.toolCalls().stream().noneMatch(c -> resolvedIds.contains(c.id()))) {
+        history.remove(i);
+        i--;
+      } else {
+        break;
+      }
+    }
+    return this;
   }
 
   private List<AgentMessage> buildReservedMessages() {
