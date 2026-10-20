@@ -53,7 +53,6 @@ public record TaskRecord(
       throw new IllegalArgumentException("steps must be >= 0");
     }
     contextMessages = contextMessages == null ? List.of() : List.copyOf(contextMessages);
-    tokenUsage = tokenUsage == null ? TokenUsage.zero() : tokenUsage;
   }
 
   /** 新建任务工厂（CREATED，默认值）。 */
