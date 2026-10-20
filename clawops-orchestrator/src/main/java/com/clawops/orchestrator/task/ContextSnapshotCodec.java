@@ -5,6 +5,7 @@ import com.clawops.harness.spi.TokenUsage;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 上下文快照与 token 用量的 JSON 编解码（落 task 表 jsonb 列）。
@@ -54,6 +55,26 @@ public class ContextSnapshotCodec {
       return mapper.readValue(json, TokenUsage.class);
     } catch (Exception e) {
       throw new IllegalStateException("反序列化 token 用量失败: " + json, e);
+    }
+  }
+
+  /** 工具入参 / 审计 detail 的 Map 编解码（落 jsonb）。 */
+  public String serializeArguments(Map<String, Object> args) {
+    try {
+      return mapper.writeValueAsString(args == null ? Map.of() : args);
+    } catch (Exception e) {
+      throw new IllegalStateException("序列化参数失败", e);
+    }
+  }
+
+  public Map<String, Object> deserializeArguments(String json) {
+    if (json == null || json.isBlank()) {
+      return Map.of();
+    }
+    try {
+      return mapper.readValue(json, new TypeReference<Map<String, Object>>() {});
+    } catch (Exception e) {
+      throw new IllegalStateException("反序列化参数失败: " + json, e);
     }
   }
 }

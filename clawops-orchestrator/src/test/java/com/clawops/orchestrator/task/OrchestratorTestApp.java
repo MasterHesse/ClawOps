@@ -11,10 +11,10 @@ import org.springframework.context.annotation.Bean;
  * orchestrator 无 web starter，Jackson autoconfig 不激活，故显式提供 ObjectMapper bean。
  */
 @SpringBootApplication
-class OrchestratorTestApp {
+public class OrchestratorTestApp {
 
   @Bean
-  ObjectMapper objectMapper() {
+  public ObjectMapper objectMapper() {
     return new ObjectMapper();
   }
 }

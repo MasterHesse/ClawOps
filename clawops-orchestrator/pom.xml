@@ -22,10 +22,14 @@
       <groupId>com.clawops</groupId>
       <artifactId>clawops-harness</artifactId>
     </dependency>
-    <!-- 持久层：JPA + Jackson（jsonb 序列化） -->
+    <!-- 持久层：JPA + JdbcTemplate + Jackson（jsonb 序列化） -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
