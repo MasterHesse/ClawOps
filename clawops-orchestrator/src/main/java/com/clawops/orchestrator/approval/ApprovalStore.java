@@ -16,6 +16,9 @@ public interface ApprovalStore {
 
   List<ApprovalRecord> findPendingByTask(String taskId);
 
+  /** 已批准的审批单（断点恢复时 ApprovedCallGate 据此放行匹配调用）。 */
+  List<ApprovalRecord> findApprovedByTask(String taskId);
+
   /** 应用决策；非 PENDING 状态再决策抛 {@link ApprovalStateException}。 */
   ApprovalRecord decide(
       String approvalId, ApprovalStatus decision, String reason, String decidedBy);

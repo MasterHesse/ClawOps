@@ -58,12 +58,22 @@ public class JdbcApprovalStore implements ApprovalStore {
 
   @Override
   public List<ApprovalRecord> findPendingByTask(String taskId) {
+    return queryByTaskAndStatus(taskId, "PENDING");
+  }
+
+  @Override
+  public List<ApprovalRecord> findApprovedByTask(String taskId) {
+    return queryByTaskAndStatus(taskId, "APPROVED");
+  }
+
+  private List<ApprovalRecord> queryByTaskAndStatus(String taskId, String status) {
     return jdbc.query(
         "SELECT id, task_id, tool_call_id, tool_name, arguments::text AS arguments,"
             + " required_permission, status, reason, decided_by, created_at, decided_at"
-            + " FROM approval WHERE task_id = ? AND status = 'PENDING' ORDER BY created_at",
+            + " FROM approval WHERE task_id = ? AND status = ? ORDER BY created_at",
         new ApprovalRowMapper(codec),
-        UUID.fromString(taskId));
+        UUID.fromString(taskId),
+        status);
   }
 
   @Override
