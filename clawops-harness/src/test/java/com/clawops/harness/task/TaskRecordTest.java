@@ -80,4 +80,34 @@ class TaskRecordTest {
     assertThat(done.contextMessages()).hasSize(2);
     assertThat(done.pauseReason()).isNull();
   }
+
+  @Test
+  @DisplayName("fail 迁移至 FAILED 并记录原因")
+  void shouldFailTask() {
+    TaskRecord task = TaskRecord.create("t", "p", Instant.EPOCH).withStatus(TaskState.RUNNING, 2);
+    TaskRecord failed = task.fail("工具熔断", 2, new TokenUsage(5, 2, 7), List.of());
+    assertThat(failed.status()).isEqualTo(TaskState.FAILED);
+    assertThat(failed.result()).isEqualTo("工具熔断");
+    assertThat(failed.status().isTerminal()).isTrue();
+  }
+
+  @Test
+  @DisplayName("cancel 可从 RUNNING 或 PAUSED 转移，终态不可取消")
+  void shouldCancelFromNonTerminal() {
+    TaskRecord running =
+        TaskRecord.create("t", "p", Instant.EPOCH).withStatus(TaskState.RUNNING, 0);
+    TaskRecord cancelled = running.cancel();
+    assertThat(cancelled.status()).isEqualTo(TaskState.CANCELLED);
+
+    assertThatThrownBy(() -> cancelled.cancel()).isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  @DisplayName("非法迁移抛 IllegalStateException")
+  void shouldRejectIllegalTransition() {
+    TaskRecord created = TaskRecord.create("t", "p", Instant.EPOCH);
+    assertThatThrownBy(() -> created.withStatus(TaskState.SUCCEEDED, 0))
+        .isInstanceOf(IllegalStateException.class);
+    assertThatThrownBy(() -> created.pause("x")).isInstanceOf(IllegalStateException.class);
+  }
 }

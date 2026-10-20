@@ -15,7 +15,7 @@
 
   <properties>
     <!-- W1 起步 60%，爬坡至 80%（conventions/testing.md §4） -->
-    <jacoco.min.line-ratio>0.60</jacoco.min.line-ratio>
+    <jacoco.min.line-ratio>0.80</jacoco.min.line-ratio>
   </properties>
 
   <!-- 主代码零第三方依赖（纯内核）；langchain4j 仅存在于 test 侧的 FakeChatModel（conventions/testing.md §2） -->

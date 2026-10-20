@@ -16,4 +16,7 @@ public interface AgentEventListener {
   default void onDone(String answer, int steps, TokenUsage usage) {}
 
   default void onError(Throwable error) {}
+
+  /** 工具需要 HITL 审批时触发：循环将暂停，等待审批结果后恢复。 */
+  default void onApprovalRequired(ToolCall call, String approvalId) {}
 }
