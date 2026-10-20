@@ -13,19 +13,35 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.web.servlet.client.RestTestClient;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.EnabledIfDockerAvailable;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * OpenAPI 契约守护（conventions/api.md §6）：运行时生成的契约必须与仓内 docs/openapi/openapi.json 一致，防止 AI 静默改接口。
  *
  * <p>重新生成：{@code ./mvnw -pl clawops-gateway failsafe:integration-test -Dopenapi.export=true}
+ *
+ * <p>W2 起应用含数据源与 Flyway，测试用 Testcontainers PG17+pgvector（禁连 dev/prod 实例）。
  */
 @Tag("it")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Testcontainers
+@EnabledIfDockerAvailable
 @DisplayName("OpenAPI 契约比对")
 class OpenApiContractIT {
 
   private static final Path COMMITTED_CONTRACT = Path.of("..", "docs", "openapi", "openapi.json");
+
+  @Container @ServiceConnection
+  private static final PostgreSQLContainer POSTGRES =
+      new PostgreSQLContainer("pgvector/pgvector:0.8.7-pg17-trixie")
+          .withDatabaseName("clawops")
+          .withUsername("clawops")
+          .withPassword("clawops");
 
   @Value("${local.server.port}")
   private int port;

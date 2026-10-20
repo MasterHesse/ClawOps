@@ -2,6 +2,20 @@ spring:
   application:
     name: clawops-gateway
 
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:clawops}
+    username: ${POSTGRES_USER:clawops}
+    password: ${POSTGRES_PASSWORD:clawops-dev}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
 server:
   port: ${CLAWOPS_PORT:8080}
 
