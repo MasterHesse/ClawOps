@@ -232,6 +232,17 @@
             </goals>
           </execution>
           <execution>
+            <!-- IT 覆盖率纳入：failsafe 带 jacoco agent，append 写入同一 jacoco.exec -->
+            <id>prepare-agent-integration</id>
+            <goals>
+              <goal>prepare-agent-integration</goal>
+            </goals>
+            <configuration>
+              <destFile>${project.build.directory}/jacoco.exec</destFile>
+              <append>true</append>
+            </configuration>
+          </execution>
+          <execution>
             <id>report</id>
             <phase>verify</phase>
             <goals>

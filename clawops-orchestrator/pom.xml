@@ -14,7 +14,7 @@
   <description>图编排 / 路由 / Checkpoint / HITL 审批节点</description>
 
   <properties>
-    <jacoco.min.line-ratio>0.50</jacoco.min.line-ratio>
+    <jacoco.min.line-ratio>0.70</jacoco.min.line-ratio>
   </properties>
 
   <dependencies>
