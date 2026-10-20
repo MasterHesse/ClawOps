@@ -222,17 +222,18 @@ V2（rag）：`CREATE EXTENSION IF NOT EXISTS vector`；`kb_doc(id, title, sourc
 
 ## 执行状态跟踪（每完成一个任务在此打勾并写 commit hash）
 
-- [ ] A1  - [ ] A2  - [ ] A3
-- [ ] B1  - [ ] B2  - [ ] B3
-- [ ] C1  - [ ] C2  - [ ] C3  - [ ] C4  - [ ] C5
-- [ ] D1  - [ ] D2  - [ ] D3  - [ ] D4  - [ ] D5  - [ ] D6
-- [ ] E1  - [ ] E2  - [ ] E3  - [ ] E4  - [ ] E5  - [ ] E6  - [ ] E7  - [ ] E8  - [ ] E9
+- [x] A1 (7bc8458) - [x] A2 (c010471) - [x] A3 (ed10a25)
+- [x] B1 (7986740) - [x] B2 (c64f6b9) - [x] B3 (fddce76)
+- [x] C1 (eeae54d) - [x] C2 (e65f…) - [x] C3 (6e09e47) - [x] C4 (5872200) - [x] C5 (4825181)
+- [x] D1 (44a2e59) - [x] D2 (525baeb) - [x] D3 (0459b2f) - [x] D4 (c90f34e) - [x] D5 (e75cc15) - [x] D6
+- [x] E1  - [ ] E2  - [ ] E3  - [ ] E4  - [ ] E5  - [ ] E6  - [ ] E7  - [ ] E8  - [ ] E9
 - [ ] F1  - [ ] F2  - [ ] F3  - [ ] F4  - [ ] F5  - [ ] F6
 
 ## 环境备忘
 
-- dev 基础设施已启动（compose project `clawops-dev`：PG 5432 clawops/clawops-dev、Redis 6379 等）
-- Windows 构建：`.\mvnw.cmd -B -ntp ...`；Spotless googleJavaFormat（4 空格缩进其实 GJF 是 2 空格——以 spotless:apply 为准）
+- dev 基础设施：compose project `clawops-dev`，**PG 固定 5433 端口**（宿主机 5432 被 Windows 本机 PostgreSQL 占用，2026-10-20 记录于 PROGRESS 问题日志），凭据 clawops/clawops-dev/clawops；`.env` 已创建（不入库）
+- Boot 4 模块化要点：Flyway 自动配置需 `spring-boot-starter-flyway`（仅加 flyway-core 不会触发自动配置）
+- Windows 构建：`.\mvnw.cmd -B -ntp ...`；Spotless googleJavaFormat
 - 集成测试需 Docker（已可用）；CI 用 GitHub Actions ubuntu runner
 - LLM key 在 `.env`（不入库）；CI 无 key 走 Demo/Fake 路径
 - 测试命名：`should<Expect>When<Condition>` + 中文 @DisplayName；IT 加 @Tag("it")；AssertJ；禁 Thread.sleep

@@ -44,17 +44,22 @@
 
 ## W2 持久化 + RAG（M2）
 
-- [ ] Flyway 迁移脚本：task / task_step / audit / approval / kb_doc / kb_chunk / eval_case
-- [ ] TaskStore：任务状态落库 + 断点恢复（kill 进程后重启可续跑，附验证记录）
-- [ ] Checkpoint 机制（每步落盘，含工具入参出参摘要）
-- [ ] HITL 审批：approval 表 + 审批接口 + 前端审批卡片
-- [ ] RAG：文档解析（md/pdf/txt）→ 切分（可调 chunk/overlap）→ Embedding → pgvector HNSW
-- [ ] 混合检索：向量 + tsvector 全文 + 应用层 RRF 融合 + Top-K 可配
-- [ ] 引用溯源：回答携带 chunk 来源与跳转
+- [x] Flyway 迁移脚本：task / task_step / audit / approval / kb_doc / kb_chunk / eval_case（V1 orchestrator + V2 rag）
+- [x] TaskStore：任务状态落库 + 断点恢复（TaskRunner + TaskResumeIT 模拟进程死亡重启续跑）
+- [x] Checkpoint 机制（每步落盘，含工具入参出参摘要；JdbcCheckpointStore）
+- [x~] HITL 审批：approval 表 + 审批状态机 + JdbcApprovalStore（**接口+前端卡片待 E4/E8**）
+- [x] RAG：文档解析（md/pdf/txt）→ 切分（可调 chunk/overlap）→ Embedding → pgvector HNSW
+- [x] 混合检索：向量 + tsvector 全文 + 应用层 RRF 融合 + Top-K 可配（HybridRetriever）
+- [x] 引用溯源：RetrievedChunk 携带 docTitle/seq/content/source（**REST 暴露待 E5**）
 - [ ] 知识库灌入真实文档（自选一个真实项目/课程的文档 + 复盘记录），记录文档数量与切分参数
 - [ ] 知识库管理页：上传、切分参数、检索测试（输入问题看召回片段）
 - [ ] RAG 开/关对比评测（≥10 条问答样本），结果入 docs/metrics/
 - [ ] 打 tag v0.2.0
+
+> **进度（2026-10-20）**：W2 后端核心已全部落地（A1-A3 数据层、B1-B3 harness SPI/暂停恢复、C1-C5 orchestrator 持久化+断点恢复+审批、D1-D6 RAG 全链路、E1 装配、错误码 2002/2003/4002/4003），全部 TDD + IT + 覆盖率最终门槛（harness 0.80 / orchestrator 0.70 / rag 0.65）+ SpotBugs + ArchUnit 全绿，全量 `./mvnw verify` BUILD SUCCESS。
+> **剩余交付**：E2（Lc4j 条件装配，可简化用 Demo/Fake）、E3-E5（任务/审批/KB REST + SSE）、E6（knowledge.search 工具）、E7（openapi.json 重新生成）、E8（前端 tasks/kb/chat 审批卡片）、E9（gateway ArchUnit + 覆盖率 0.60）、F1-F6（真实文档灌入 + 评测 + ADR + PROGRESS + tag v0.2.0）。
+> 详见 `docs/plans/2026-10-20-w2-persistence-rag.md` 执行状态跟踪表。
+> **接续入口**：从 E3 TaskController 开始（gateway task 包），错误码已就绪；TaskRunner/RagService bean 已由 OrchestratorConfig/RagConfig 装配。
 
 ## W3 接入 + 异步 + 靶场（M3）
 
