@@ -45,6 +45,7 @@ public class AgentLoop {
   private final LoopConfig config;
   private final ContextConfig contextConfig;
   private final ApprovalGate approvalGate;
+  private ContextManager context;
 
   private final Map<String, CircuitBreaker> circuitBreakers = new HashMap<>();
 
@@ -154,6 +155,22 @@ public class AgentLoop {
         gate);
   }
 
+  /** 返回一个使用新权限管理器的新 AgentLoop 实例（每任务独立权限，审批通过后 elevate）。 */
+  public AgentLoop withPermissionManager(PermissionManager manager) {
+    return new AgentLoop(
+        modelClient,
+        toolRegistry,
+        manager,
+        retryExecutor,
+        retryConfig,
+        loopGuard,
+        tokenCounter,
+        listener,
+        config,
+        contextConfig,
+        approvalGate);
+  }
+
   /** 执行一次任务。 */
   public LoopResult run(String task) {
     return run(task, List.of());
@@ -165,7 +182,7 @@ public class AgentLoop {
    * <p>恢复时传入上次快照的 {@link AgentMessage} 列表；AgentLoop 会重建上下文后续跑。 详见 ADR-008。
    */
   public LoopResult run(String task, List<AgentMessage> resumedHistory) {
-    ContextManager context =
+    this.context =
         new ContextManager(contextConfig, tokenCounter, new WindowCompressionStrategy())
             .withSystemPrompt(config.systemPrompt())
             .withRolePrompt(config.rolePrompt())
@@ -174,6 +191,11 @@ public class AgentLoop {
             .withHistory(resumedHistory)
             .addUserMessage(task);
     return runInternal(context);
+  }
+
+  /** 返回最近一次运行的上下文快照（断点恢复落盘用；paused 时已 trim 未配对工具调用）。 */
+  public List<AgentMessage> contextSnapshot() {
+    return context == null ? List.of() : context.build();
   }
 
   private LoopResult runInternal(ContextManager context) {
@@ -219,6 +241,8 @@ public class AgentLoop {
 
       return LoopResult.maxSteps(steps, totalUsage);
     } catch (ApprovalRequiredException e) {
+      // 暂停前裁剪尾部未配对的 assistant(toolCalls)，断点恢复时模型重新发起调用（ADR-008）
+      context.trimUnresolvedToolCalls();
       listener.onApprovalRequired(e.call(), e.approvalId());
       return LoopResult.paused(e.call(), e.approvalId(), steps, totalUsage);
     } catch (Exception e) {
