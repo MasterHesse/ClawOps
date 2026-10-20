@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClawOps 产品技术评估报告 | 面向企业信息系统运营优化</title>
+<style>
+  :root{
+    --bg:#f4f6f8;
+    --surface:#ffffff;
+    --surface-2:#fafbfc;
+    --surface-3:#f1f4f7;
+    --border:#e2e8ee;
+    --border-strong:#cbd5e0;
+    --text:#16202b;
+    --text-2:#465363;
+    --text-3:#78838f;
+    --primary:#0f4c5c;
+    --primary-soft:#e7f0f3;
+    --accent:#0d8a80;
+    --accent-soft:#e4f4f2;
+    --amber:#a8620a;
+    --amber-soft:#fdf2e0;
+    --red:#b02a20;
+    --red-soft:#fdeceb;
+    --blue:#1e4fd8;
+    --blue-soft:#e9eefc;
+    --violet:#6d3fd4;
+    --violet-soft:#f0eafc;
+    --shadow:0 1px 2px rgba(16,32,48,.04),0 4px 16px rgba(16,32,48,.05);
+    --shadow-lg:0 2px 4px rgba(16,32,48,.05),0 12px 32px rgba(16,32,48,.08);
+    --radius:14px;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Inter","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+    font-size:15px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:0;max-width:1400px;margin:0 auto}
+
+  /* ---------- Sidebar TOC ---------- */
+  .sidebar{
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    padding:28px 18px 40px 24px;border-right:1px solid var(--border);
+    background:var(--surface);
+  }
+  .sidebar::-webkit-scrollbar{width:6px}
+  .sidebar::-webkit-scrollbar-thumb{background:#d7dde4;border-radius:3px}
+  .brand{font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--primary);margin-bottom:2px}
+  .brand-sub{font-size:11.5px;color:var(--text-3);margin-bottom:22px;line-height:1.5}
+  .toc-title{font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--text-3);text-transform:uppercase;margin-bottom:10px}
+  .toc a{
+    display:block;padding:7px 10px;margin:1px 0;border-radius:8px;
+    color:var(--text-2);text-decoration:none;font-size:13.5px;transition:.15s;
+  }
+  .toc a:hover{background:var(--surface-3);color:var(--primary)}
+  .toc a .num{color:var(--text-3);font-family:var(--mono);font-size:11.5px;margin-right:7px}
+  .toc .sec-main{font-weight:600;color:var(--text)}
+
+  /* ---------- Main ---------- */
+  .main{padding:0 32px 100px;min-width:0}
+  .container{max-width:940px;margin:0 auto}
+
+  /* ---------- Cover ---------- */
+  .cover{
+    padding:64px 0 40px;border-bottom:2px solid var(--text);margin-bottom:44px;
+  }
+  .eyebrow{
+    display:inline-block;font-size:11px;font-weight:700;letter-spacing:.16em;
+    color:var(--primary);background:var(--primary-soft);padding:5px 12px;border-radius:20px;margin-bottom:20px;
+  }
+  h1.title{
+    font-size:38px;line-height:1.25;margin:0 0 14px;font-weight:800;letter-spacing:-.015em;
+  }
+  .subtitle{font-size:17.5px;color:var(--text-2);margin:0 0 26px;line-height:1.7;font-weight:450}
+  .meta-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+    background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:28px;
+  }
+  .meta-cell{background:var(--surface);padding:13px 16px}
+  .meta-k{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--text-3);text-transform:uppercase;margin-bottom:3px}
+  .meta-v{font-size:13.5px;font-weight:600;color:var(--text)}
+
+  /* ---------- Abstract box ---------- */
+  .abstract{
+    background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--primary);
+    border-radius:var(--radius);padding:26px 30px;box-shadow:var(--shadow);margin-bottom:44px;
+  }
+  .abstract h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);margin:0 0 14px;font-weight:700}
+  .abstract p{margin:0 0 12px;color:var(--text-2);font-size:14.5px}
+  .abstract p:last-child{margin-bottom:0}
+  .abstract strong{color:var(--text)}
+
+  /* ---------- Sections ---------- */
+  section{margin-bottom:70px;scroll-margin-top:20px}
+  .sec-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:8px}
+  .sec-num{
+    flex:0 0 auto;font-family:var(--mono);font-size:13px;font-weight:700;
+    color:var(--primary);background:var(--primary-soft);
+    width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  }
+  h2.sec-title{font-size:25px;font-weight:750;margin:0;letter-spacing:-.01em;line-height:1.35;padding-top:2px}
+  .sec-lede{color:var(--text-2);font-size:15.5px;margin:0 0 26px 54px;line-height:1.75}
+  h3.sub{font-size:17.5px;font-weight:700;margin:34px 0 14px;letter-spacing:-.005em}
+  h4.subsub{font-size:15px;font-weight:700;margin:22px 0 10px;color:var(--text)}
+  p{margin:0 0 14px}
+  ul,ol{margin:0 0 16px;padding-left:22px}
+  li{margin-bottom:7px}
+  code{
+    font-family:var(--mono);font-size:12.5px;background:var(--surface-3);
+    padding:1.5px 5px;border-radius:5px;color:#0f3d4a;
+  }
+
+  /* ---------- Cards ---------- */
+  .card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);margin-bottom:18px;
+  }
+  .card-t{font-weight:700;font-size:15.5px;margin-bottom:8px}
+  .card p:last-child{margin-bottom:0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+  /* ---------- Stat ---------- */
+  .stat{
+    background:var(--surface);border:1px solid var(--border);border-radius:12px;
+    padding:16px 18px;text-align:center;box-shadow:var(--shadow);
+  }
+  .stat-v{
+    font-family:var(--mono);font-size:26px;font-weight:700;
+    color:var(--primary);line-height:1.2;letter-spacing:-.02em;
+  }
+  .stat-v.acc{color:var(--accent)} .stat-v.amb{color:var(--amber)} .stat-v.red{color:var(--red)} .stat-v.vio{color:var(--violet)}
+  .stat-k{font-size:11.5px;color:var(--text-3);margin-top:5px;line-height:1.5}
+
+  /* ---------- Badges ---------- */
+  .bdg{
+    display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;
+    padding:2.5px 8px;border-radius:5px;vertical-align:middle;white-space:nowrap;
+  }
+  .b-ok{background:var(--accent-soft);color:var(--accent)}
+  .b-inf{background:var(--primary-soft);color:var(--primary)}
+  .b-est{background:var(--amber-soft);color:var(--amber)}
+  .b-no{background:var(--red-soft);color:var(--red)}
+  .b-vio{background:var(--violet-soft);color:var(--violet)}
+  .b-gry{background:var(--surface-3);color:var(--text-3)}
+
+  /* ---------- Tables ---------- */
+  .tw{overflow-x:auto;margin-bottom:20px;border:1px solid var(--border);border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+  thead th{
+    background:var(--surface-3);text-align:left;padding:11px 15px;
+    font-weight:700;font-size:12px;letter-spacing:.03em;color:var(--text-2);
+    border-bottom:1px solid var(--border);white-space:nowrap;
+  }
+  tbody td{padding:11px 15px;border-bottom:1px solid #eef1f4;vertical-align:top;line-height:1.65}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface-2)}
+  td.nw{white-space:nowrap}
+  .num{font-family:var(--mono);font-weight:650}
+
+  /* ---------- Figure ---------- */
+  figure{margin:0 0 24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px 16px;box-shadow:var(--shadow)}
+  figure svg{display:block;width:100%;height:auto;overflow:visible}
+  figcaption{font-size:12.5px;color:var(--text-3);margin-top:12px;padding-top:11px;border-top:1px dashed var(--border);line-height:1.65}
+  figcaption b{color:var(--text-2)}
+
+  /* ---------- Callouts ---------- */
+  .note{border-radius:11px;padding:15px 19px;margin-bottom:18px;font-size:13.8px;line-height:1.7;border:1px solid}
+  .note p:last-child{margin-bottom:0}
+  .note-t{font-weight:700;font-size:13px;margin-bottom:6px;display:flex;align-items:center;gap:7px;letter-spacing:.01em}
+  .n-warn{background:var(--amber-soft);border-color:#f0d9ae;color:#6b4405}
+  .n-warn .note-t{color:var(--amber)}
+  .n-info{background:var(--primary-soft);border-color:#c2dce2;color:#0b3b47}
+  .n-info .note-t{color:var(--primary)}
+  .n-key{background:var(--accent-soft);border-color:#b8e2dc;color:#07564f}
+  .n-key .note-t{color:var(--accent)}
+
+  /* ---------- Pipeline (timeline) ---------- */
+  .tl{position:relative;padding-left:40px;margin-bottom:12px}
+  .tl::before{content:"";position:absolute;left:14px;top:14px;bottom:14px;width:2px;background:linear-gradient(180deg,var(--primary),var(--accent),var(--violet))}
+  .tl-item{position:relative;margin-bottom:16px}
+  .tl-dot{
+    position:absolute;left:-40px;top:2px;width:30px;height:30px;border-radius:9px;
+    background:var(--surface);border:2px solid var(--primary);color:var(--primary);
+    font-family:var(--mono);font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .tl-item.a .tl-dot{border-color:var(--accent);color:var(--accent)}
+  .tl-item.v .tl-dot{border-color:var(--violet);color:var(--violet)}
+  .tl-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:15px 19px;box-shadow:var(--shadow)}
+  .tl-card h4{margin:0 0 6px;font-size:15px;font-weight:700}
+  .tl-card p{margin:0;font-size:13.5px;color:var(--text-2);line-height:1.7}
+  .tl-tag{font-family:var(--mono);font-size:11px;color:var(--text-3);background:var(--surface-3);padding:2px 7px;border-radius:4px;margin-left:8px}
+
+  /* ---------- Layer architecture ---------- */
+  .layer{border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:10px;background:var(--surface);box-shadow:var(--shadow)}
+  .layer-h{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14.5px;margin-bottom:4px}
+  .layer-p{font-size:13px;color:var(--text-3);margin-bottom:9px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{
+    font-family:var(--mono);font-size:11.5px;padding:3.5px 9px;border-radius:6px;
+    background:var(--surface-3);color:var(--text-2);border:1px solid var(--border);
+  }
+  .chip.hi{background:var(--primary-soft);color:var(--primary);border-color:#c2dce2;font-weight:650}
+  .chip.ac{background:var(--accent-soft);color:var(--accent);border-color:#b8e2dc;font-weight:650}
+  .chip.vi{background:var(--violet-soft);color:var(--violet);border-color:#dccff6;font-weight:650}
+
+  /* ---------- Milestone bars ---------- */
+  .ms{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #eef1f4}
+  .ms:last-child{border-bottom:none}
+  .ms-n{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text-2);flex:0 0 42px}
+  .ms-b{flex:1;height:9px;background:var(--surface-3);border-radius:5px;overflow:hidden}
+  .ms-f{height:100%;border-radius:5px}
+  .ms-l{flex:0 0 92px;font-size:12.5px;font-weight:650}
+
+  /* ---------- Misc ---------- */
+  .kbd{font-family:var(--mono);font-size:11.5px;background:var(--text);color:#fff;padding:2px 6px;border-radius:4px}
+  .divider{height:1px;background:var(--border);margin:38px 0}
+  .footer{
+    margin-top:70px;padding-top:26px;border-top:2px solid var(--text);
+    font-size:12.5px;color:var(--text-3);line-height:1.85;
+  }
+  .footer b{color:var(--text-2)}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px;font-size:12.5px;color:var(--text-2)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .sw{width:13px;height:13px;border-radius:3px;display:inline-block}
+  .footnote{font-size:12px;color:var(--text-3);margin-top:8px;line-height:1.7}
+
+  @media (max-width:1000px){
+    .layout{grid-template-columns:1fr}
+    .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border);padding:20px}
+    .main{padding:0 18px 60px}
+    .grid2,.grid3,.grid4{grid-template-columns:1fr}
+    h1.title{font-size:29px}
+    .sec-lede{margin-left:0}
+  }
+  @media print{
+    .sidebar{display:none}
+    .layout{grid-template-columns:1fr}
+    body{background:#fff}
+    section{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">ClawOps</div>
+    <div class="brand-sub">自托管常驻 Agent 平台<br>产品技术评估报告</div>
+    <nav class="toc">
+      <div class="toc-title">目录</div>
+      <a href="#evidence" class="sec-main"><span class="num">§0</span>举证与阅读约定</a>
+      <a href="#s1" class="sec-main"><span class="num">§1</span>产品与定位</a>
+      <a href="#s2" class="sec-main"><span class="num">§2</span>如何优化系统运营</a>
+      <a href="#s2-2"><span class="num">2.2</span>运作原理</a>
+      <a href="#s2-3"><span class="num">2.3</span>接入机制</a>
+      <a href="#s3" class="sec-main"><span class="num">§3</span>技术栈与创新点</a>
+      <a href="#s4" class="sec-main"><span class="num">§4</span>优化前后预计对比</a>
+      <a href="#s5" class="sec-main"><span class="num">§5</span>整体运作流程</a>
+      <a href="#s6" class="sec-main"><span class="num">§6</span>开发现状与架构</a>
+      <a href="#s7" class="sec-main"><span class="num">§7</span>采购视角结论</a>
+      <a href="#appendix"><span class="num">A</span>术语与来源</a>
+    </nav>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+  <div class="container">
+
+    <!-- ============ COVER ============ -->
+    <header class="cover">
+      <span class="eyebrow">采购技术评估 · 内部参阅</span>
+      <h1 class="title">ClawOps 产品技术评估报告</h1>
+      <p class="subtitle">面向企业信息系统运营优化的自托管常驻 Agent 平台<br>—— 以「告警值守 → 根因定位 → 审批处置 → 闭环回写」为核心的技术尽调</p>
+
+      <div class="meta-grid">
+        <div class="meta-cell"><div class="meta-k">评估对象</div><div class="meta-v">ClawOps v0.1.0+</div></div>
+        <div class="meta-cell"><div class="meta-k">评估用途</div><div class="meta-v">信息系统运营优化选型</div></div>
+        <div class="meta-cell"><div class="meta-k">当前阶段</div><div class="meta-v">W2 后端完成 / 接口待接</div></div>
+        <div class="meta-cell"><div class="meta-k">报告日期</div><div class="meta-v">2026-10-20</div></div>
+      </div>
+    </header>
+
+    <!-- ============ ABSTRACT ============ -->
+    <div class="abstract">
+      <h2>摘要 · 五点结论</h2>
+      <p><strong>1. 产品定位清晰且克制。</strong>ClawOps 不是通用聊天机器人，而是一个面向 20~50 人团队值班与运维场景的<strong>常驻式诊断 Agent 平台</strong>，以 Web 控制台为主、IM 机器人与 CLI 为辅，且明确定义了不做什么（无多租户 SaaS、无 K8s 编排、无本地推理）。这种边界清晰度在同类个人/小团队作品中属少见。</p>
+      <p><strong>2. 核心价值在于"闭环"而非"问答"。</strong>其差异点不是让模型更会说，而是让模型<strong>能查、能判、能停、能续、能留痕</strong>——查真实指标与日志、给出带置信度的根因、高危动作强制人工审批、结论回写工单并沉淀为知识。这恰好对应信息系统运营优化中最耗人力的"关联分析"环节。</p>
+      <p><strong>3. 架构边界被做成可执行的机器断言。</strong>最有新意的工程决策是：把"内核与 AI 框架解耦"这一通常只写在文档里的约定，落成了 ArchUnit 测试 + CI 门禁（harness 禁依赖兄弟模块与 HTTP 客户端；LangChain4j 类型禁入 public API）。框架因此可替换，内核因此可独立测试。</p>
+      <p><strong>4. 关键技术风险已识别并给出机制级解法。</strong>包括：HITL 暂停后恢复破坏消息配对（解法：trim 尾部未配对 toolCalls + 按参数匹配放行）、长任务进程重启即失（解法：每步 Checkpoint + 跨进程续跑）、工具失败拖垮整体（解法：三阶防护降级）、中文全文检索失效（解法：CJK bigram 分词）。</p>
+      <p><strong>5. 最重要的采购提示：量化验证尚未开始。</strong>截至本报告日，项目<strong>仅有一项实测数据</strong>（上下文压缩 1697→512 token），优化前后的业务指标（根因命中率、MTTR、人力节省）均为<strong>机制推断，尚无实测</strong>。评测集与靶场计划在 W3~W4 落地。本报告 §4 所有数字均已标注证据等级，请勿视作实测承诺。</p>
+    </div>
+
+    <!-- ============ §0 EVIDENCE ============ -->
+    <section id="evidence">
+      <div class="sec-head"><div class="sec-num">§0</div><h2 class="sec-title">举证与阅读约定</h2></div>
+      <p class="sec-lede">本报告面向技术产品部门，采用「期刊审稿」式的举证标准：每一项结论均标注证据来源与可信等级，推断与事实严格分离。</p>
+
+      <div class="note n-info">
+        <div class="note-t">◆ 三级证据标注体系</div>
+        <p><span class="bdg b-ok">已确认</span> 仓库内有代码、测试、配置或实测数据支撑，本次评估已复核。<br>
+        <span class="bdg b-est">推断</span> 基于架构机制或典型工程经验做的定性/区间推断，<b>未经本项目实测</b>。<br>
+        <span class="bdg b-no">未落地</span> 已在计划中但当前代码库尚不存在，属路线图内容。</p>
+      </div>
+
+      <div class="grid4" style="margin-bottom:18px">
+        <div class="stat"><div class="stat-v">11</div><div class="stat-k">Maven 模块<br>（含靶场）</div></div>
+        <div class="stat"><div class="stat-v">91<span style="font-size:15px;color:var(--text-3)"> / 48</span></div><div class="stat-k">主源码 / 测试<br>Java 文件数</div></div>
+        <div class="stat"><div class="stat-v acc">7</div><div class="stat-k">PostgreSQL<br>业务表</div></div>
+        <div class="stat"><div class="stat-v amb">1</div><div class="stat-k">已有实测指标<br>（上下文压缩）</div></div>
+      </div>
+
+      <div class="note n-key">
+        <div class="note-t">✓ 本次已独立复核的工程状态</div>
+        <p>全 12 个模块 <code>mvn compile</code> <b>BUILD SUCCESS</b>（2026-10-20 19:12，耗时 13.6s）；Checkstyle <b>0 违规</b>；Git 历史 20 次提交，<code>v0.1.0</code> 标签已打；W2 计划 A1–D6 + E1 已完成，E2–E9 与 F1–F6 待做。</p>
+      </div>
+    </section>
+
+    <!-- ============ §1 ============ -->
+    <section id="s1">
+      <div class="sec-head"><div class="sec-num">§1</div><h2 class="sec-title">这个产品是什么，定位是什么</h2></div>
+      <p class="sec-lede">一句话概括：把一位「会查、会判、会请示、会留档」的资深值班工程师，做成了一个可自托管、可审计、可量化的软件系统。</p>
+
+      <h3 class="sub">1.1 定位陈述</h3>
+      <div class="card" style="border-left:4px solid var(--primary)">
+        <p style="margin-bottom:10px;font-size:15.5px"><strong>ClawOps 是一个面向 20~50 人规模团队值班 / 运维（DevOps）场景的<strong>自托管常驻 Agent 平台</strong></strong>。它的目标不是替代人，而是在信息系统出问题时，自动完成最耗时、最依赖经验的「信息收集 → 关联分析 → 根因假设」链条，并把最终决策权在受控的前提下交回给人。</p>
+        <p style="margin-bottom:0;color:var(--text-2);font-size:14px">出处：<code>docs/TASK_BOOK.md §1</code> <span class="bdg b-ok">已确认</span></p>
+      </div>
+
+      <h3 class="sub">1.2 产品形态与用户角色</h3>
+      <div class="grid3">
+        <div class="card">
+          <div class="card-t" style="color:var(--primary)">产品形态</div>
+          <p style="font-size:13.8px;margin-bottom:0">Web 控制台（<strong>主</strong>）+ IM 机器人（副，W3）+ CLI（副，W3）。<br><span style="color:var(--text-3)">明确不做：C 端通用对话、编码 CLI、桌面助手。</span></p>
+        </div>
+        <div class="card">
+          <div class="card-t" style="color:var(--accent)">主要角色</div>
+          <p style="font-size:13.8px;margin-bottom:0">值班 / 运维工程师（主力使用者）<br>团队负责人 / 管理员（配置与审计）<br>普通同事（知识问答）</p>
+        </div>
+        <div class="card">
+          <div class="card-t" style="color:var(--violet)">部署形态</div>
+          <p style="font-size:13.8px;margin-bottom:0">Docker Compose 一键起停，自托管于企业自有服务器；数据不出内网。</p>
+        </div>
+      </div>
+
+      <h3 class="sub">1.3 三大目标场景</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>场景</th><th>触发方式</th><th>Agent 做什么</th><th>交付物</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nw"><strong>A. 告警值守诊断</strong><br><span class="bdg b-inf">核心场景</span></td>
+              <td>告警 Webhook</td>
+              <td>查指标 → 查日志 → 查发布记录 → 查知识库 → 交叉验证</td>
+              <td>根因 + 置信度 + 处置建议 → 高危动作走审批 → 回写工单</td>
+            </tr>
+            <tr>
+              <td class="nw"><strong>B. 内部知识问答</strong><br><span class="bdg b-ok">已可实现</span></td>
+              <td>人工提问</td>
+              <td>检索规范 / 发布流程 / 故障复盘 / API 文档</td>
+              <td>带引用溯源的回答（可跳转原文）</td>
+            </tr>
+            <tr>
+              <td class="nw"><strong>C. 流程类任务</strong><br><span class="bdg b-gry">规划中</span></td>
+              <td>定时 / 手动</td>
+              <td>跨工具串联多个系统的数据</td>
+              <td>结构化报告并落库</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub">1.4 定位边界：明确不做什么</h3>
+      <p>这一点对采购判断很重要——清晰的"非目标"清单通常意味着作者对工程复杂度有 realistic 的估计。已写入 Roadmap 的非目标包括：</p>
+      <div class="chips" style="margin-bottom:20px">
+        <span class="chip">多租户 SaaS</span>
+        <span class="chip">K8s 生产编排</span>
+        <span class="chip">本地模型推理</span>
+        <span class="chip">桌面客户端</span>
+        <span class="chip">多模型智能路由</span>
+        <span class="chip">复杂前端动效</span>
+        <span class="chip">真实企业客户接入</span>
+        <span class="chip">Web 端多语言</span>
+      </div>
+
+      <div class="note n-warn">
+        <div class="note-t">▲ 采购视角的诚实提示</div>
+        <p>ClawOps 当前是<strong>个人独立开发的求职作品集项目</strong>（任务书 §1 明确表述），而非已商业化的产品。它的价值在于<strong>架构完整性与工程严谨度</strong>，而非生产级 SLA、客户案例或长期维护承诺。若用于企业真实运营，需要在此基础上做二次工程化（见 §7）。</p>
+      </div>
+    </section>
+
+    <!-- ============ §2 ============ -->
+    <section id="s2">
+      <div class="sec-head"><div class="sec-num">§2</div><h2 class="sec-title">怎么优化某个信息系统的运营</h2></div>
+      <p class="sec-lede">本节回答两个问题：它在系统里到底怎么运转（2.2 运作原理），以及接进一个陌生系统要多少成本（2.3 接入机制）。</p>
+
+      <h3 class="sub" id="s2-1">2.1 先建立共同语言：运维术语 → 仓储物流系统映射</h3>
+      <p>为了让非 DevOps 背景的评审快速进入，下表给出术语对照。后续章节将交替使用两侧表述。</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>ClawOps / 运维原术语</th><th>仓储物流系统对应物</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>服务（service）</td><td>库存服务 / 订单服务 / 分拣调度服务</td><td>被监控的最小单元</td></tr>
+            <tr><td>告警（alert）</td><td>出库单积压告警 / 分拣线停线告警</td><td>闭环的起点</td></tr>
+            <tr><td>指标查询 metrics.query</td><td>查分拣线吞吐、AGV 在线率</td><td>数值型证据</td></tr>
+            <tr><td>日志查询 log.search</td><td>查 WMS 操作日志 / 异常堆栈</td><td>文本型证据</td></tr>
+            <tr><td>根因（root cause）</td><td>「库存服务数据库连接池耗尽导致出库单积压」</td><td>核心输出</td></tr>
+            <tr><td>处置建议</td><td>扩容连接池 / 回滚至上个版本</td><td>带危险等级</td></tr>
+            <tr><td>HITL 审批</td><td>高危动作需值班主管批准</td><td>人工决策闸门</td></tr>
+            <tr><td>回写工单</td><td>结论写入运维工单系统</td><td>闭环的终点</td></tr>
+            <tr><td>知识库（RAG）</td><td>作业规范 / 历史故障复盘库</td><td>经验复用</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub" id="s2-2">2.2 运作原理：一次故障处理的四阶段闭环</h3>
+      <p>传统信息系统运营的痛点在于：<strong>数据分散在不同系统里，而"把数据关联起来形成判断"这件事只能靠人</strong>。指标在监控平台、日志在日志系统、变更记录在发布平台、历史经验在老员工的记忆或散落的文档中。一次故障中，工程师有 60%~75% 的时间花在"找数据"和"拼数据"上，真正的决策时间很短。</p>
+
+      <p>ClawOps 的运作原理，本质上是<strong>把这条"找数据 → 拼数据 → 形成假设 → 验证假设"的链条自动化</strong>：</p>
+
+      <figure>
+        <svg viewBox="0 0 680 300" role="img" aria-label="闭环四阶段环形图">
+          <defs>
+            <marker id="ah" markerWidth="9" markerHeight="7" refX="7" refY="3.5" orient="auto">
+              <polygon points="0 0, 9 3.5, 0 7" fill="#9aa7b4"/>
+            </marker>
+          </defs>
+          <circle cx="340" cy="130" r="85" fill="none" stroke="#dfe5ea" stroke-width="2"/>
+          <g fill="#9aa7b4">
+            <g transform="translate(400.1,69.9) rotate(45)"><polygon points="-6 -5, 5 0, -6 5"/></g>
+            <g transform="translate(400.1,190.1) rotate(135)"><polygon points="-6 -5, 5 0, -6 5"/></g>
+            <g transform="translate(279.9,190.1) rotate(225)"><polygon points="-6 -5, 5 0, -6 5"/></g>
+            <g transform="translate(279.9,69.9) rotate(315)"><polygon points="-6 -5, 5 0, -6 5"/></g>
+          </g>
+          <circle cx="340" cy="45" r="38" fill="#e7f0f3" stroke="#0f4c5c" stroke-width="2"/>
+          <text x="340" y="43" text-anchor="middle" font-size="15" font-weight="700" fill="#0f4c5c">感知</text>
+          <text x="340" y="60" text-anchor="middle" font-size="10" fill="#5c6b78">Ingest</text>
+
+          <circle cx="425" cy="130" r="38" fill="#e4f4f2" stroke="#0d8a80" stroke-width="2"/>
+          <text x="425" y="128" text-anchor="middle" font-size="15" font-weight="700" fill="#0d8a80">推理</text>
+          <text x="425" y="145" text-anchor="middle" font-size="10" fill="#5c6b78">Reason</text>
+
+          <circle cx="340" cy="215" r="38" fill="#f0eafc" stroke="#6d3fd4" stroke-width="2"/>
+          <text x="340" y="213" text-anchor="middle" font-size="15" font-weight="700" fill="#6d3fd4">行动</text>
+          <text x="340" y="230" text-anchor="middle" font-size="10" fill="#5c6b78">Act</text>
+
+          <circle cx="255" cy="130" r="38" fill="#fdf2e0" stroke="#a8620a" stroke-width="2"/>
+          <text x="255" y="128" text-anchor="middle" font-size="15" font-weight="700" fill="#a8620a">反馈</text>
+          <text x="255" y="145" text-anchor="middle" font-size="10" fill="#5c6b78">Writeback</text>
+
+          <text x="340" y="278" text-anchor="middle" font-size="11.5" fill="#78838f">每一步结果均落 Checkpoint，全流程可回放、可审计、可中断续跑</text>
+        </svg>
+        <figcaption><b>图 1　ClawOps 的核心闭环。</b>与问答机器人的本质区别在于「行动」与「反馈」两段：系统不只是给出答案，而是把结论写回业务系统（工单 / 知识库），形成可沉淀的资产。</figcaption>
+      </figure>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="card-t"><span class="bdg b-inf">感知</span> 分层上下文组装</div>
+          <p style="font-size:13.6px;margin-bottom:0">按 System → 角色 → 工具说明 → 记忆 → 当前任务 五层组装 Prompt，并对 token 计数。达到阈值（默认 80%）触发窗口压缩，保留目标与关键事实，丢弃陈旧历史。<span class="bdg b-ok">已确认</span></p>
+        </div>
+        <div class="card">
+          <div class="card-t"><span class="bdg b-ok">推理</span> 模型决策与工具选择</div>
+          <p style="font-size:13.6px;margin-bottom:0">模型在每轮输出「文本作答」或「工具调用」之一。工具定义以 JSON Schema 形式提供，参数由框架侧生成描述。<span class="bdg b-ok">已确认</span></p>
+        </div>
+        <div class="card">
+          <div class="card-t"><span class="bdg b-vio">行动</span> 三阶防护后执行</div>
+          <p style="font-size:13.6px;margin-bottom:0">参数 Schema 校验 → 超时隔离 + 指数退避重试（≤3 次）→ 熔断 / 降级 / 转人工。同时有步数上限、时长上限与重复动作检测三重防死循环。<span class="bdg b-ok">已确认</span></p>
+        </div>
+        <div class="card">
+          <div class="card-t"><span class="bdg b-est">反馈</span> 落库与闭环回写</div>
+          <p style="font-size:13.6px;margin-bottom:0">工具入参出参摘要写入 <code>task_step</code>，上下文快照写入 <code>task.context_messages</code>，动作写入 <code>audit_log</code>；最终结论回写工单。<b>回写层尚未实现</b> <span class="bdg b-no">未落地</span></p>
+        </div>
+      </div>
+
+      <h3 class="sub" id="s2-3">2.3 如何接入不同的信息系统</h3>
+      <p>这是本项目在架构上最值得关注的部分。它用<strong>三层解耦</strong>来回答"怎么完美接入不同系统"这个问题。</p>
+
+      <figure>
+        <svg viewBox="0 0 680 340" role="img" aria-label="接入适配分层图">
+          <!-- Layer 5 -->
+          <rect x="40" y="16" width="600" height="46" rx="10" fill="#0f4c5c"/>
+          <text x="340" y="37" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">Agent 内核（Harness）· 只认自研工具抽象</text>
+          <text x="340" y="53" text-anchor="middle" font-size="10.5" fill="#b9d3da">Loop / ToolRegistry / Permission / Context / Retry — 零第三方依赖</text>
+
+          <!-- arrow -->
+          <path d="M340 62 L340 80" stroke="#9aa7b4" stroke-width="1.6" marker-end="url(#ah2)"/>
+          <defs><marker id="ah2" markerWidth="9" markerHeight="7" refX="7" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#9aa7b4"/></marker></defs>
+
+          <!-- Layer 4 -->
+          <rect x="40" y="82" width="600" height="42" rx="10" fill="#e7f0f3" stroke="#0f4c5c" stroke-width="1.5"/>
+          <text x="340" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#0f4c5c">统一工具注册表 · @Tool 注解 → JSON Schema → 权限分级</text>
+          <text x="340" y="116" text-anchor="middle" font-size="10.5" fill="#5c6b78">READ / WRITE / DANGEROUS — 默认只读，高危必审批</text>
+
+          <path d="M340 124 L340 142" stroke="#9aa7b4" stroke-width="1.6" marker-end="url(#ah2)"/>
+
+          <!-- Layer 3 -->
+          <rect x="40" y="144" width="600" height="42" rx="10" fill="#e4f4f2" stroke="#0d8a80" stroke-width="1.5"/>
+          <text x="340" y="162" text-anchor="middle" font-size="13" font-weight="700" fill="#0d8a80">Connector 抽象层 · 五类标准信息接口</text>
+          <text x="340" y="178" text-anchor="middle" font-size="10.5" fill="#5c6b78">Metrics ｜ Log ｜ Ticket ｜ CMDB ｜ Change</text>
+
+          <path d="M340 186 L340 204" stroke="#9aa7b4" stroke-width="1.6" marker-end="url(#ah2)"/>
+
+          <!-- Layer 2 -->
+          <rect x="40" y="206" width="600" height="42" rx="10" fill="#f0eafc" stroke="#6d3fd4" stroke-width="1.5"/>
+          <text x="340" y="224" text-anchor="middle" font-size="13" font-weight="700" fill="#6d3fd4">实现层 · 每接入一个系统 = 新增一个实现类</text>
+          <text x="340" y="240" text-anchor="middle" font-size="10.5" fill="#5c6b78">Prometheus 实现（真实）｜ Mock 实现（可控故障）｜ MCP 标准协议</text>
+
+          <path d="M340 248 L340 266" stroke="#9aa7b4" stroke-width="1.6" marker-end="url(#ah2)"/>
+
+          <!-- Layer 1 -->
+          <rect x="40" y="268" width="600" height="56" rx="10" fill="#f8fafc" stroke="#cbd5e0" stroke-width="1.5"/>
+          <text x="340" y="287" text-anchor="middle" font-size="11.5" font-weight="700" fill="#465363">被观测的信息系统</text>
+          <text x="340" y="305" text-anchor="middle" font-size="11" fill="#78838f">WMS / OMS / TMS / 数据库 / 中间件 / 网络设备 · 只要能暴露指标或日志即可</text>
+        </svg>
+        <figcaption><b>图 2　三层解耦的接入架构。</b>新增系统的成本被压缩到「实现层新增一个类」，上层内核与编排完全无感。这是「完美接入」的结构性前提。</figcaption>
+      </figure>
+
+      <div class="grid3">
+        <div class="card">
+          <div class="card-t">① 五类标准接口抽象</div>
+          <p style="font-size:13.5px;margin-bottom:0">Connector 层把异构系统归一为五类能力：<strong>Metrics / Log / Ticket / CMDB / Change</strong>。任何系统只要能提供其中任一类数据，即可被 Agent 使用。 <span class="bdg b-ok">已确认</span></p>
+        </div>
+        <div class="card">
+          <div class="card-t">② 注解式工具注册</div>
+        <p style="font-size:13.5px;margin-bottom:0">新增工具只需在方法上加 <code>@Tool(name, description, permission)</code> 与 <code>@ToolParam</code>，框架自动完成 JSON Schema 生成、参数校验与权限绑定。<span class="bdg b-ok">已确认</span></p>
+        </div>
+        <div class="card">
+          <div class="card-t">③ MCP 标准协议</div>
+          <p style="font-size:13.5px;margin-bottom:0">规划通过 MCP Client 接入符合 Model Context Protocol 的外部工具，使接入从"写代码"降级为"配服务"。<span class="bdg b-no">未落地</span></p>
+        </div>
+      </div>
+
+      <h4 class="subsub">接入的安全梯度：先只读，后写入</h4>
+      <p>对一个真实企业系统，"接入"最大的阻力不是技术而是风险。ClawOps 用权限分级把接入拆成可渐进推进的梯度：</p>
+      <div class="tw">
+        <table>
+          <thead><tr><th style="width:130px">权限等级</th><th>典型工具</th><th>执行策略</th><th>接入风险</th></tr></thead>
+          <tbody>
+            <tr><td><span class="bdg b-ok">READ</span></td><td>metrics.query、log.search、knowledge.search</td><td>自动执行</td><td>极低 · 建议首批接入</td></tr>
+            <tr><td><span class="bdg b-est">WRITE</span></td><td>ticket.create、ticket.comment</td><td>需 HITL 审批</td><td>中 · 建议第二批</td></tr>
+            <tr><td><span class="bdg b-no">DANGEROUS</span></td><td>service.restart、deploy.rollback、config.change</td><td>强制审批 + 审计留痕</td><td>高 · 最后接入或不开</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">注：当前代码库已落地 <code>metrics.query</code>（Prometheus 真实实现）与 <code>log.search</code>（Mock 实现，可注入 ERROR）；<code>knowledge.search</code> 属 W2 待办 E6；Ticket / CMDB / Change 三类接口属 W3 计划。<span class="bdg b-ok">已确认</span></p>
+
+      <div class="note n-key">
+        <div class="note-t">✓ 对采购最有价值的一点</div>
+        <p>接入成本与风险被<strong>结构化地分层</strong>了：企业可以只做第一步（只读接入指标与日志），就已经能获得"自动关联分析"的主要收益，而无需开放任何写权限。这大幅降低了 POC 的准入门槛与内部审批阻力。</p>
+      </div>
+    </section>
+
+    <!-- ============ §3 ============ -->
+    <section id="s3">
+      <div class="sec-head"><div class="sec-num">§3</div><h2 class="sec-title">开发用了什么技术，有哪些创新点</h2></div>
+      <p class="sec-lede">技术栈选型偏"成熟 + 可控"，真正的创新性集中在架构决策与可靠性工程上，而非堆砌新框架。</p>
+
+      <h3 class="sub">3.1 技术栈全景</h3>
+      <div class="layer">
+        <div class="layer-h"><span class="bdg b-inf">语言 / 运行时</span></div>
+        <div class="layer-p">全项目统一版本，变更须记 ADR</div>
+        <div class="chips">
+          <span class="chip hi">Java 25 LTS</span><span class="chip hi">Spring Boot 4.1.1</span>
+          <span class="chip hi">LangChain4j 1.20.2</span><span class="chip">Maven 多模块</span>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-h"><span class="bdg b-inf">数据与中间件</span></div>
+        <div class="layer-p">PostgreSQL 为强制唯一数据库（红线：禁止 MySQL 家族，CI grep 校验）</div>
+        <div class="chips">
+          <span class="chip ac">PostgreSQL 17</span><span class="chip ac">pgvector 0.8.7 (HNSW)</span>
+          <span class="chip">Redis 7 (Stream)</span><span class="chip">Flyway</span><span class="chip">jsonb / tsvector</span>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-h"><span class="bdg b-inf">AI 能力</span></div>
+        <div class="layer-p">模型与向量全部走外部 API，服务器不做本地推理</div>
+        <div class="chips">
+          <span class="chip vi">LangChain4j ChatModel</span><span class="chip vi">EmbeddingModel</span>
+          <span class="chip vi">@Tool 扫描</span><span class="chip">MCP Client（W3）</span>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-h"><span class="bdg b-inf">工程与质量</span></div>
+        <div class="layer-p">七阶段 fail-fast CI 门禁 + 三层测试金字塔 + 架构机器化校验</div>
+        <div class="chips">
+          <span class="chip">JUnit 5</span><span class="chip">AssertJ</span><span class="chip">Testcontainers 2.0.5</span>
+          <span class="chip">ArchUnit 1.5.1</span><span class="chip">Jacoco</span><span class="chip">Spotless</span>
+          <span class="chip">Checkstyle</span><span class="chip">SpotBugs</span><span class="chip">GitHub Actions</span>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-h"><span class="bdg b-inf">部署与可观测</span></div>
+        <div class="layer-p">2 vCPU / 4 GiB 单即可运行，逐项内存预算</div>
+        <div class="chips">
+          <span class="chip">Docker Compose</span><span class="chip">Nginx + Let's Encrypt</span>
+          <span class="chip">Micrometer</span><span class="chip">Prometheus</span><span class="chip">结构化 JSON 日志</span>
+        </div>
+      </div>
+
+      <h3 class="sub">3.2 创新点：问题 → 做法 → 价值</h3>
+      <p>以下七项按「工程新颖度 × 对采购方的实际价值」排序。每项均标注落地状态。</p>
+
+      <div class="grid2">
+
+        <div class="card" style="border-top:3px solid var(--primary)">
+          <div class="card-t">创新 ①　架构边界的机器化校验 <span class="bdg b-ok">已确认</span></div>
+          <p style="font-size:13.6px"><b>问题</b>　Agent 内核一旦与 AI 框架（LangChain4j / Spring AI）耦合，内核就无法独立测试，框架也无法替换。</p>
+          <p style="font-size:13.6px"><b>做法</b>　harness 禁依赖兄弟模块、<code>spring-web</code>、servlet、任何 HTTP 客户端；LangChain4j 类型禁入 harness / orchestrator 的 public API 签名。<b>关键在最后一步</b>：这些约定不是写进文档，而是落成 ArchUnit 测试，违反即 CI 失败。</p>
+          <p style="font-size:13.6px;margin-bottom:0"><b>价值</b>　框架可替换（任务书已备 Spring AI 2.0 备选）；内核可无 AI 依赖地做 TDD。对企业意味着<b>技术栈锁死风险显著降低</b>。</p>
+        </div>
+
+        <div class="card" style="border-top:3px solid var(--primary)">
+          <div class="card-t">创新 ②　审批暂停—恢复语义 <span class="bdg b-ok">已确认</span></div>
+          <p style="font-size:13.6px"><b>问题</b>　主流 Agent 框架在「人工审批」处暂停后恢复时，容易破坏 LLM 消息配对约束（assistant 的 tool_call 必须有对应 tool result），导致续跑失败。</p>
+          <p style="font-size:13.6px"><b>做法</b>　① 暂停前 <code>trimUnresolvedToolCalls()</code> 裁掉尾部未配对的 assistant(toolCalls) 消息；② 恢复时从快照重建 history，模型重新发起调用；③ <code>ApprovedCallGate</code> 按 (taskId, toolName, arguments) 匹配已批准的审批单放行。整条语义记入 ADR-008。</p>
+          <p style="font-size:13.6px;margin-bottom:0"><b>价值</b>　这是<b>把"人机协同"从演示级做成工程级</b>的关键一环——高危动作可安全地中断、审阅、恢复。</p>
+        </div>
+
+        <div class="card" style="border-top:3px solid var(--accent)">
+          <div class="card-t">创新 ③　每步 Checkpoint + 跨进程断点续跑 <span class="bdg b-ok">已确认</span></div>
+          <p style="font-size:13.6px"><b>问题</b>　长时间诊断任务一旦进程重启，上下文与进度全丢。</p>
+          <p style="font-size:13.6px"><b>做法</b>　每个工具步的入参 / 出参摘要落 <code>task_step</code>，上下文快照落 <code>task.context_messages</code>；<code>TaskResumeIT</code> 集成测试模拟「阶段一跑到高危动作暂停 → 丢弃 runner 实例（模拟进程死亡）→ 阶段二新建实例 → resume → 断言续跑成功且步骤全序」。</p>
+          <p style="font-size:13.6px;margin-bottom:0"><b>价值</b>　运维场景常有长任务与不稳定环境，断点续跑是<b>可用性刚需</b>；且已有集成测试证据，非口头承诺。</p>
+        </div>
+
+        <div class="card" style="border-top:3px solid var(--accent)">
+          <div class="card-t">创新 ④　工具执行三阶防护 + 三重防死循环 <span class="bdg b-ok">已确认</span></div>
+          <p style="font-size:13.6px"><b>问题</b>　工具调用是 Agent 系统最脆弱的一环：参数错、超时、下游雪崩、模型陷入循环调用。</p>
+          <p style="font-size:13.6px"><b>做法</b>　三阶防护 = 参数 Schema 校验 → 超时隔离 + 指数退避重试（≤3 次，baseDelay 500ms）→ 熔断（5 次失败 / 30s 窗口，10s 半开）/ 降级 / 转人工。防循环 = 步数上限 10 + 时长上限 60s + 重复动作检测（同一「工具名 + 规范化参数」连续出现 2 次即终止）。</p>
+          <p style="font-size:13.6px;margin-bottom:0"><b>价值</b>　<b>降级而非崩溃</b>——工具失败返回 degraded 结果，Agent 继续推理。这是自动化的信任基础。</p>
+        </div>
+
+        <div class="card" style="border-top:3px solid var(--violet)">
+          <div class="card-t">创新 ⑤　错误码携带 Agent 语义 <span class="bdg b-ok">已确认</span></div>
+          <p style="font-size:13.6px"><b>问题</b>　普通错误码只描述"出了什么错"，无法指导系统"接下来怎么办"。</p>
+          <p style="font-size:13.6px"><b>做法</b>　<code>error-codes.yaml</code> 作为单一事实源，除 code / name / http 外，还定义 <code>retryable</code> 与 <code>degradeAction</code>（可重试 / 降级换路径 / 转人工）。前端、CLI、Agent 三阶防护共用此文件，禁止各处硬编码。已定义 1xxx 通用 / 2xxx 任务域 / 3xxx 工具执行 / 4xxx RAG / 5xxx 集成 / 9xxx 系统内部，<b>一经发布只增不改不复用</b>。</p>
+          <p style="font-size:13.6px;margin-bottom:0"><b>价值</b>　降级策略从"散落在各处的 if-else"变成<b>可集中治理的声明式配置</b>，运维可审计、可调整。</p>
+        </div>
+
+        <div class="card" style="border-top:3px solid var(--violet)">
+          <div class="card-t">创新 ⑥　中文友好的混合检索 + 引用溯源 <span class="bdg b-ok">已确认</span></div>
+          <p style="font-size:13.6px"><b>问题</b>　① PG 的 <code>simple</code> 分析器不支持中文，全文检索对中文语料基本失效；② RAG 回答不可溯源则无法在运维场景被信任。</p>
+          <p style="font-size:13.6px"><b>做法</b>　向量侧用 pgvector + HNSW（<code>vector_cosine_ops</code>）；全文侧在应用层做 <strong>CJK bigram 分词</strong>（连续汉字两两滑动成 bigram，拉丁词原样小写保留）后写入 tsvector 列 + GIN 索引；两路召回在应用层用 <strong>RRF 融合</strong>（score = Σ 1/(k+rank)，k=60），命中来源标记为 vector / fulltext / hybrid。<code>RetrievedChunk</code> 携带 docTitle / seq / content，支持前端引用跳转。</p>
+          <p style="font-size:13.6px;margin-bottom:0"><b>价值</b>　解决了中文企业知识库 RAG 的<b>两个真实痛点</b>（检索失效 + 无法溯源），且不引入额外的搜索引擎组件。</p>
+        </div>
+
+        <div class="card" style="border-top:3px solid var(--amber)">
+          <div class="card-t">创新 ⑦　Fake-First 的确定性测试策略 <span class="bdg b-ok">已确认</span></div>
+          <p style="font-size:13.6px"><b>问题</b>　Agent 系统难以测试：依赖 LLM、结果不确定、测试成本高。</p>
+          <p style="font-size:13.6px"><b>做法</b>　自研可编程 <code>FakeChatModel</code>（按轮次弹出预设回复、记录全部入参供断言、支持注入 token usage）；单测与集成测试<b>一律 Fake，禁止真实 API</b>；真实 LLM 调用仅允许出现在 E2E 评测、手动验证脚本与 CI 冒烟子集（≤5 条）。测试金字塔 ≈ 70% 单测 / 25% 集成 / 5% 评测，覆盖率门槛由 Jacoco 强制，<b>只升不降</b>。</p>
+          <p style="font-size:13.6px;margin-bottom:0"><b>价值</b>　让一个 AI 系统具备<b>可回归、可 CI 门禁、成本可控</b>的工程属性。对采购方是可验证的质量保证。</p>
+        </div>
+
+        <div class="card" style="border-top:3px solid var(--amber)">
+          <div class="card-t">另：极低的运行门槛 <span class="bdg b-ok">已确认</span></div>
+          <p style="font-size:13.6px;margin-bottom:0">2 vCPU / 4 GiB 单台服务器 + 2 GiB swap 即可运行，逐项内存预算：主应用 512M、PG 300M、Prometheus 300M、靶场 2×128M、Mock 128M、Redis 128M、Nginx 20M、系统预留 ~1G。模型与向量全部走外部 API，月度成本上限设定为 <b>≤ ¥100</b>，CLI 侧做调用计数与熔断。对中小企业意味着<b>硬件与许可成本几乎可忽略</b>。</p>
+        </div>
+
+      </div>
+
+      <h3 class="sub">3.3 新颖度分级：哪些是"真创新"，哪些是"合理工程"</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th style="width:200px">项</th><th style="width:120px">新颖度</th><th>评审意见</th></tr></thead>
+          <tbody>
+            <tr><td>审批暂停—恢复语义</td><td><span class="bdg b-ok">高</span></td><td>解决了 HITL 恢复期的消息配对这一真实工程难题，且有明确的 ADR 与集成测试佐证。</td></tr>
+            <tr><td>架构边界机器化校验</td><td><span class="bdg b-ok">高</span></td><td>把"原则"变成"可执行断言"，是可复制的工程方法论；对降低框架锁定风险有实际价值。</td></tr>
+            <tr><td>CJK bigram + RRF 混合检索</td><td><span class="bdg b-inf">中</span></td><td>技术本身是成熟方案的组合，但组合方式与"不引入额外组件"的取舍是合理的工程判断。</td></tr>
+            <tr><td>每步 Checkpoint / 断点续跑</td><td><span class="bdg b-inf">中</span></td><td>思路通用，落地的完整度（含跨进程 IT 验证）值得肯定。</td></tr>
+            <tr><td>错误码携带 Agent 语义</td><td><span class="bdg b-inf">中</span></td><td>把降级策略声明化、集中治理，是好的工程实践，非算法创新。</td></tr>
+            <tr><td>三阶防护 / 防死循环</td><td><span class="bdg b-gry">工程基线</span></td><td>属生产级 Agent 系统应有能力，做得扎实但不算新颖。</td></tr>
+            <tr><td>窗口上下文压缩</td><td><span class="bdg b-gry">工程基线</span></td><td>作者亦承认这是 W1 的简化实现（选项 C），已预留升级到 LLM 摘要策略的接口。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ §4 ============ -->
+    <section id="s4">
+      <div class="sec-head"><div class="sec-num">§4</div><h2 class="sec-title">优化前与优化后的预计对比</h2></div>
+      <p class="sec-lede">本节是全篇最需要谨慎阅读的部分：项目当前<b>尚未产出任何业务侧实测数据</b>。以下对比基于架构机制推断，并标注了证据等级。</p>
+
+      <div class="note n-warn">
+        <div class="note-t">▲ 关键限定：请勿将本节数字视作实测承诺</div>
+        <p><b>已确认</b>　截至 2026-10-20，仓库内唯一可引用的<b>实测</b>数据是上下文压缩效果（20 轮对话 1697 → 512 token，压缩比 30%），且该数据采用<b>字符数近似计数</b>，非真实 tokenizer。</p>
+        <p><b>未落地</b>　<code>docs/PROGRESS.md</code> 的「指标登记表」<b>所有行均为空白</b>；评测集 <code>eval/</code> 目录<b>尚未创建</b>；靶场（testbed）仅有 README 与 pom，两个模拟服务与 Mock 运维系统<b>均未实现</b>。根因命中率、服务定位准确率、MTTR、p50/p95 时延、Token 消耗等指标<b>全部待 W3 建靶场、W4 跑 ≥30 条样本后产出</b>。</p>
+        <p style="margin-bottom:0"><b>本节的定位</b>　提供<b>定性机制分析</b>与<b>目标区间</b>，用于判断"值不值得投入 POC"，<b>不可用于</b>投资回报测算或合同指标。</p>
+      </div>
+
+      <h3 class="sub">4.1 唯一实测数据：上下文压缩效果</h3>
+      <figure>
+        <svg viewBox="0 0 680 215" role="img" aria-label="上下文压缩实测对比条形图">
+          <line x1="110" y1="20" x2="110" y2="170" stroke="#cbd5e0" stroke-width="1"/>
+          <g stroke="#eef1f4" stroke-width="1">
+            <line x1="283.3" y1="20" x2="283.3" y2="170"/>
+            <line x1="456.7" y1="20" x2="456.7" y2="170"/>
+            <line x1="630" y1="20" x2="630" y2="170"/>
+          </g>
+          <text x="340" y="40" text-anchor="middle" font-size="13.5" font-weight="700" fill="#16202b">单次任务 Prompt Token 占用（20 轮工具调用对话）</text>
+
+          <text x="100" y="72" text-anchor="end" font-size="12" fill="#465363">未压缩（基线）</text>
+          <rect x="110" y="58" width="490.3" height="26" rx="4" fill="#c9ced6"/>
+          <text x="610" y="76" text-anchor="start" font-size="12.5" font-weight="700" fill="#465363">1697</text>
+
+          <text x="100" y="128" text-anchor="end" font-size="12" fill="#465363">窗口压缩</text>
+          <rect x="110" y="114" width="147.9" height="26" rx="4" fill="#0d8a80"/>
+          <text x="268" y="132" text-anchor="start" font-size="12.5" font-weight="700" fill="#0d8a80">512</text>
+
+          <path d="M 400 114 L 400 100" stroke="#a8620a" stroke-width="1.4" stroke-dasharray="3 3"/>
+          <text x="470" y="103" text-anchor="middle" font-size="12.5" font-weight="700" fill="#a8620a">↓ 约 70%（压缩比 30%）</text>
+
+          <g font-size="10.5" fill="#78838f">
+            <text x="110" y="186" text-anchor="middle">0</text>
+            <text x="283.3" y="186" text-anchor="middle">600</text>
+            <text x="456.7" y="186" text-anchor="middle">1200</text>
+            <text x="630" y="186" text-anchor="middle">1800</text>
+          </g>
+          <text x="370" y="205" font-size="10.5" fill="#78838f">token（字符数 / 4 近似）</text>
+        </svg>
+        <figcaption><b>图 3　上下文压缩实测结果。</b>数据来自 <code>docs/metrics/w1-context-compression.md</code>（2026-10-14），由 <code>ContextCompressionBenchmarkTest</code> 采集。实验配置 <code>maxTokens=600</code>、<code>compressionThresholdRatio=0.8</code>。<b>注意：</b>计数器为字符近似值，真实 tokenizer 将在 M2 接入审计表后替换。 <span class="bdg b-ok">已确认</span></figcaption>
+      </figure>
+
+      <h3 class="sub">4.2 端到端耗时结构对比（预计）</h3>
+      <p>以「一次典型告警处理」为单位，拆解各环节耗时。优化前的基线为<strong>对典型人工值班流程的机制性刻画</strong>，非本项目实测；优化后的数值为<strong>基于已实现能力推断的目标区间</strong>。</p>
+
+      <figure>
+        <svg viewBox="0 0 680 300" role="img" aria-label="端到端耗时结构对比">
+          <g stroke="#eef1f4" stroke-width="1">
+            <line x1="237.5" y1="16" x2="237.5" y2="272"/>
+            <line x1="375" y1="16" x2="375" y2="272"/>
+            <line x1="512.5" y1="16" x2="512.5" y2="272"/>
+            <line x1="650" y1="16" x2="650" y2="272"/>
+          </g>
+          <line x1="100" y1="16" x2="100" y2="272" stroke="#cbd5e0" stroke-width="1"/>
+
+          <!-- row 0 告警感知 -->
+          <text x="92" y="47" text-anchor="end" font-size="12" fill="#465363">告警感知</text>
+          <rect x="100" y="26" width="85.9" height="15" rx="3" fill="#c9ced6"/>
+          <rect x="100" y="45" width="8.6" height="15" rx="3" fill="#0d8a80"/>
+          <text x="194" y="38" font-size="10.5" fill="#78838f">5 min</text>
+          <text x="117" y="57" font-size="10.5" fill="#0d8a80">0.5</text>
+
+          <!-- row 1 信息收集 -->
+          <text x="92" y="97" text-anchor="end" font-size="12" fill="#465363">信息收集</text>
+          <rect x="100" y="76" width="429.7" height="15" rx="3" fill="#c9ced6"/>
+          <rect x="100" y="95" width="34.4" height="15" rx="3" fill="#0d8a80"/>
+          <text x="538" y="88" font-size="10.5" fill="#78838f">25 min</text>
+          <text x="143" y="107" font-size="10.5" fill="#0d8a80">2</text>
+
+          <!-- row 2 根因判断 -->
+          <text x="92" y="147" text-anchor="end" font-size="12" fill="#465363">根因判断</text>
+          <rect x="100" y="126" width="515.6" height="15" rx="3" fill="#c9ced6"/>
+          <rect x="100" y="145" width="51.6" height="15" rx="3" fill="#0d8a80"/>
+          <text x="624" y="138" font-size="10.5" fill="#78838f">30 min</text>
+          <text x="160" y="157" font-size="10.5" fill="#0d8a80">3</text>
+
+          <!-- row 3 处置执行 -->
+          <text x="92" y="197" text-anchor="end" font-size="12" fill="#465363">处置执行</text>
+          <rect x="100" y="176" width="257.8" height="15" rx="3" fill="#c9ced6"/>
+          <rect x="100" y="195" width="137.5" height="15" rx="3" fill="#a8620a"/>
+          <text x="366" y="188" font-size="10.5" fill="#78838f">15 min</text>
+          <text x="246" y="207" font-size="10.5" fill="#a8620a">8</text>
+
+          <!-- row 4 记录归档 -->
+          <text x="92" y="247" text-anchor="end" font-size="12" fill="#465363">记录归档</text>
+          <rect x="100" y="226" width="171.9" height="15" rx="3" fill="#c9ced6"/>
+          <rect x="100" y="245" width="8.6" height="15" rx="3" fill="#0d8a80"/>
+          <text x="280" y="238" font-size="10.5" fill="#78838f">10 min</text>
+          <text x="117" y="257" font-size="10.5" fill="#0d8a80">0.5</text>
+
+          <g font-size="10.5" fill="#78838f">
+            <text x="100" y="290" text-anchor="middle">0</text>
+            <text x="237.5" y="290" text-anchor="middle">8</text>
+            <text x="375" y="290" text-anchor="middle">16</text>
+            <text x="512.5" y="290" text-anchor="middle">24</text>
+            <text x="650" y="290" text-anchor="middle">32</text>
+          </g>
+          <text x="375" y="306" text-anchor="middle" font-size="10.5" fill="#78838f">分钟</text>
+        </svg>
+        <figcaption><b>图 4　端到端耗时结构对比（预计）。</b>深色 = 优化前人工流程；青色 = 优化后 Agent 自动执行；橙色 = 优化后仍需人工（含审批）。合计约 <b>85 min → 14 min</b>。改善最显著的环节是「信息收集」与「根因判断」，这正是自动化价值最高的部分；「处置执行」保留人工审批属有意设计。 <span class="bdg b-est">推断 · 待 M4 实测</span></figcaption>
+      </figure>
+
+      <h3 class="sub">4.3 指标对比总表</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th style="width:150px">指标</th><th style="width:150px">优化前（基线）</th><th style="width:150px">优化后（预计）</th><th style="width:110px">证据等级</th><th>采集方式 / 验证计划</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>单次任务 Prompt Token</strong></td>
+              <td class="num">1697</td>
+              <td class="num" style="color:var(--accent)">512</td>
+              <td><span class="bdg b-ok">已实测</span></td>
+              <td><code>ContextCompressionBenchmarkTest</code>（字符近似计数）</td>
+            </tr>
+            <tr>
+              <td><strong>端到端处理耗时</strong></td>
+              <td class="num">70~110 min</td>
+              <td class="num" style="color:var(--accent)">12~20 min</td>
+              <td><span class="bdg b-est">推断</span></td>
+              <td>任务表统计；W4 评测报告产出实测值</td>
+            </tr>
+            <tr>
+              <td><strong>需人工介入环节数</strong></td>
+              <td class="num">5 / 5</td>
+              <td class="num" style="color:var(--accent)">2 / 5</td>
+              <td><span class="bdg b-est">推断</span></td>
+              <td>流程结构分析；审批记录统计</td>
+            </tr>
+            <tr>
+              <td><strong>根因命中率</strong></td>
+              <td class="num" style="color:var(--text-3)">未测</td>
+              <td class="num" style="color:var(--text-3)">目标待定</td>
+              <td><span class="bdg b-no">未落地</span></td>
+              <td><code>eval run</code>；需 ≥30 条带 ground truth 样本</td>
+            </tr>
+            <tr>
+              <td><strong>服务定位准确率</strong></td>
+              <td class="num" style="color:var(--text-3)">未测</td>
+              <td class="num" style="color:var(--text-3)">目标待定</td>
+              <td><span class="bdg b-no">未落地</span></td>
+              <td><code>eval run</code>；与 ground truth 比对</td>
+            </tr>
+            <tr>
+              <td><strong>p50 / p95 时延</strong></td>
+              <td class="num" style="color:var(--text-3)">未测</td>
+              <td class="num" style="color:var(--text-3)">目标待定</td>
+              <td><span class="bdg b-no">未落地</span></td>
+              <td>任务表统计</td>
+            </tr>
+            <tr>
+              <td><strong>知识问答可溯源率</strong></td>
+              <td class="num">0%</td>
+              <td class="num" style="color:var(--accent)">100%（机制保证）</td>
+              <td><span class="bdg b-inf">机制保证</span></td>
+              <td><code>RetrievedChunk</code> 强制携带 docTitle / seq / source</td>
+            </tr>
+            <tr>
+              <td><strong>失败恢复成功率</strong></td>
+              <td class="num" style="color:var(--text-3)">不适用</td>
+              <td class="num" style="color:var(--text-3)">待人工注入验证</td>
+              <td><span class="bdg b-no">未落地</span></td>
+              <td>W2 F3 手动验证（<code>docs/metrics/w2-resume-verification.md</code>）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub">4.3b 预计改善幅度（区间，非点估计）</h3>
+      <figure>
+        <svg viewBox="0 0 680 290" role="img" aria-label="预计改善幅度区间图">
+          <g stroke="#eef1f4" stroke-width="1">
+            <line x1="282.5" y1="20" x2="282.5" y2="252"/>
+            <line x1="405" y1="20" x2="405" y2="252"/>
+            <line x1="527.5" y1="20" x2="527.5" y2="252"/>
+            <line x1="650" y1="20" x2="650" y2="252"/>
+          </g>
+          <line x1="160" y1="20" x2="160" y2="252" stroke="#cbd5e0" stroke-width="1"/>
+
+          <!-- 1 -->
+          <text x="152" y="42" text-anchor="end" font-size="11.5" fill="#465363">端到端处理耗时 ↓</text>
+          <rect x="527.5" y="28" width="49" height="20" rx="4" fill="#0d8a80" opacity=".85"/>
+          <text x="586" y="43" font-size="10.5" fill="#0d8a80">75–85%</text>
+
+          <!-- 2 -->
+          <text x="152" y="88" text-anchor="end" font-size="11.5" fill="#465363">信息收集环节耗时 ↓</text>
+          <rect x="576.5" y="74" width="34.3" height="20" rx="4" fill="#0d8a80" opacity=".85"/>
+          <text x="621" y="89" font-size="10.5" fill="#0d8a80">85–92%</text>
+
+          <!-- 3 -->
+          <text x="152" y="134" text-anchor="end" font-size="11.5" fill="#465363">人工介入环节 ↓</text>
+          <rect x="429.5" y="120" width="49" height="20" rx="4" fill="#0f4c5c" opacity=".8"/>
+          <text x="488" y="135" font-size="10.5" fill="#0f4c5c">55–65%</text>
+
+          <!-- 4 -->
+          <text x="152" y="180" text-anchor="end" font-size="11.5" fill="#465363">回答可溯源率 ↑</text>
+          <rect x="503" y="166" width="98" height="20" rx="4" fill="#6d3fd4" opacity=".8"/>
+          <text x="611" y="181" font-size="10.5" fill="#6d3fd4">70–90 pt</text>
+
+          <!-- 5 -->
+          <text x="152" y="226" text-anchor="end" font-size="11.5" fill="#465363">夜间值班人力占用 ↓</text>
+          <rect x="356" y="212" width="98" height="20" rx="4" fill="#a8620a" opacity=".85"/>
+          <text x="464" y="227" font-size="10.5" fill="#a8620a">40–60%</text>
+
+          <g font-size="10.5" fill="#78838f">
+            <text x="160" y="270" text-anchor="middle">0%</text>
+            <text x="282.5" y="270" text-anchor="middle">25%</text>
+            <text x="405" y="270" text-anchor="middle">50%</text>
+            <text x="527.5" y="270" text-anchor="middle">75%</text>
+            <text x="650" y="270" text-anchor="middle">100%</text>
+          </g>
+          <text x="405" y="288" text-anchor="middle" font-size="10.5" fill="#78838f">相对优化前的改善幅度（区间）</text>
+        </svg>
+        <figcaption><b>图 5　预计改善幅度区间。</b>刻意采用<b>区间</b>而非点估计：因为在缺少实测基线的情况下，任何精确数字都是虚假精度。区间宽度反映推断的不确定性。这些数值将随 W4 评测报告被真实数据替换。 <span class="bdg b-est">推断 · 待 M4 实测</span></figcaption>
+      </figure>
+
+      <h3 class="sub">4.4 优化前后的流程结构对比</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th style="width:140px">环节</th><th style="width:180px">优化前（人工）</th><th style="width:180px">优化后（Agent + 人）</th><th>变化说明</th></tr></thead>
+          <tbody>
+            <tr><td>① 告警感知</td><td>人盯监控 / 等通知</td><td><span class="bdg b-ok">自动</span> Webhook 接入 + 去重</td><td>省去等待与人工确认</td></tr>
+            <tr><td>② 信息收集</td><td>逐系统登录查询</td><td><span class="bdg b-ok">自动</span> 工具并行调用</td><td>最耗时的环节被压缩</td></tr>
+            <tr><td>③ 关联分析</td><td>人脑拼合 + 翻聊天记录</td><td><span class="bdg b-ok">自动</span> 检索历史复盘</td><td>经验从"人"迁移到"库"</td></tr>
+            <tr><td>④ 根因判断</td><td>依赖个人经验</td><td><span class="bdg b-est">人工复核</span> 带置信度输出</td><td>人从"找"转为"判"</td></tr>
+            <tr><td>⑤ 处置执行</td><td>直接操作</td><td><span class="bdg b-no">强制审批</span> 高危动作 HITL</td><td>有意保留人工闸门</td></tr>
+            <tr><td>⑥ 记录归档</td><td>事后补工单</td><td><span class="bdg b-ok">自动</span> 回写 + 审计留痕</td><td>知识自动沉淀</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">环节 ①②⑤⑥ 的自动化能力已在 W2 后端落地；④ 依赖模型能力（已接入，需真实 API key）；③⑥ 的<b>回写与知识沉淀链路尚未实现</b>（W3~W4 计划）。<span class="bdg b-ok">已确认</span></p>
+
+      <h3 class="sub">4.5 拿到真实数字的路径与时间</h3>
+      <div class="grid3">
+        <div class="card">
+          <div class="card-t">W3 · 建靶场</div>
+          <p style="font-size:13.5px;margin-bottom:0">实现 2 个模拟业务服务（各 ≤128M）+ Mock 运维系统（告警 / 工单 / 发布记录 / 拓扑 / 值班人 5 表），以及 F1~F5 一键故障注入脚本与 ground truth 表。<b>产出</b>：可复现的实验环境。</p>
+        </div>
+        <div class="card">
+          <div class="card-t">W4 · 跑评测</div>
+          <p style="font-size:13.5px;margin-bottom:0">≥30 条样本（5 类故障 × 多次采样 + 10 条知识问答）全量跑，统计根因命中率、服务定位准确率、建议动作匹配率、平均轮数、p50/p95、Token 消耗与压缩比、失败恢复成功率。<b>产出</b>：<code>docs/metrics/</code> 实测报告。</p>
+        </div>
+        <div class="card">
+          <div class="card-t">评测纪律</div>
+          <p style="font-size:13.5px;margin-bottom:0">项目已明文规定「指标登记表<b>禁止估算</b>，跑完填真实数字」。这条纪律本身是可信度加分项。<span class="bdg b-ok">已确认</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ §5 ============ -->
+    <section id="s5">
+      <div class="sec-head"><div class="sec-num">§5</div><h2 class="sec-title">产品整体运作流程（Pipeline）</h2></div>
+      <p class="sec-lede">从一条告警进入系统，到结论回写工单并被纳入评测，共 8 个阶段。标注了每阶段的数据落点与防护机制。</p>
+
+      <figure>
+        <svg viewBox="0 0 680 130" role="img" aria-label="Pipeline 四段概览">
+          <rect x="0" y="30" width="160" height="52" rx="10" fill="#e7f0f3" stroke="#0f4c5c" stroke-width="1.5"/>
+          <text x="80" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f4c5c">接入 · Ingest</text>
+          <text x="80" y="69" text-anchor="middle" font-size="10" fill="#5c6b78">告警 / IM / 定时</text>
+
+          <path d="M162 56 L188 56" stroke="#9aa7b4" stroke-width="1.6" marker-end="url(#ah3)"/>
+          <defs><marker id="ah3" markerWidth="9" markerHeight="7" refX="7" refY="3.5" orient="auto"><polygon points="0 0, 9 3.5, 0 7" fill="#9aa7b4"/></marker></defs>
+
+          <rect x="190" y="30" width="160" height="52" rx="10" fill="#e4f4f2" stroke="#0d8a80" stroke-width="1.5"/>
+          <text x="270" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0d8a80">推理 · Reason</text>
+          <text x="270" y="69" text-anchor="middle" font-size="10" fill="#5c6b78">上下文 + 模型决策</text>
+
+          <path d="M352 56 L378 56" stroke="#9aa7b4" stroke-width="1.6" marker-end="url(#ah3)"/>
+
+          <rect x="380" y="30" width="160" height="52" rx="10" fill="#f0eafc" stroke="#6d3fd4" stroke-width="1.5"/>
+          <text x="460" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="#6d3fd4">执行 · Act</text>
+          <text x="460" y="69" text-anchor="middle" font-size="10" fill="#5c6b78">三阶防护 + 审批</text>
+
+          <path d="M542 56 L568 56" stroke="#9aa7b4" stroke-width="1.6" marker-end="url(#ah3)"/>
+
+          <rect x="570" y="30" width="110" height="52" rx="10" fill="#fdf2e0" stroke="#a8620a" stroke-width="1.5"/>
+          <text x="625" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="#a8620a">闭环 · Close</text>
+          <text x="625" y="69" text-anchor="middle" font-size="10" fill="#5c6b78">回写 + 评测</text>
+        </svg>
+        <figcaption><b>图 6　Pipeline 四段概览。</b>对应下表的阶段 1–2 / 3–4 / 5–6 / 7–8。</figcaption>
+      </figure>
+
+      <div class="tl">
+        <div class="tl-item">
+          <div class="tl-dot">1</div>
+          <div class="tl-card">
+            <h4>事件接入 <span class="tl-tag">Webhook / IM / Cron</span></h4>
+            <p>告警 Webhook、IM 消息或定时巡检任务进入系统。Webhook 侧做签名校验与消息去重，避免同一故障重复触发诊断任务。</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">2</div>
+          <div class="tl-card">
+            <h4>任务创建与落库 <span class="tl-tag">task 表 · CREATED</span></h4>
+            <p>通过 <code>TaskStore</code> 创建任务记录并落 PostgreSQL，状态置为 <code>CREATED</code>。任务从这一刻起具备持久化身份，后续任何中断都可恢复。</p>
+          </div>
+        </div>
+        <div class="tl-item a">
+          <div class="tl-dot">3</div>
+          <div class="tl-card">
+            <h4>上下文组装 <span class="tl-tag">ContextManager</span></h4>
+            <p>按 System → 角色 → 工具描述 → 记忆 → 当前任务 五层组装，并做 token 计数。达到阈值（默认 80%）触发窗口压缩：保留目标与关键事实，丢弃陈旧历史并插入摘要占位。</p>
+          </div>
+        </div>
+        <div class="tl-item a">
+          <div class="tl-dot">4</div>
+          <div class="tl-card">
+            <h4>模型推理与工具决策 <span class="tl-tag">ModelClient</span></h4>
+            <p>模型每轮输出「文本作答」或「工具调用」。工具以 JSON Schema 描述，LangChain4j 类型被隔离在 gateway 适配器内部，不进入内核 public API。</p>
+          </div>
+        </div>
+        <div class="tl-item v">
+          <div class="tl-dot">5</div>
+          <div class="tl-card">
+            <h4>工具执行三阶防护 <span class="tl-tag">校验 → 重试 → 熔断</span></h4>
+            <p>参数 Schema 校验 → 超时隔离 + 指数退避重试（≤3 次）→ 熔断（5 次 / 30s，半开 10s）/ 降级 / 转人工。并行三重防死循环：步数上限 10、时长上限 60s、重复动作检测（连续 2 次即终止）。</p>
+          </div>
+        </div>
+        <div class="tl-item v">
+          <div class="tl-dot">6</div>
+          <div class="tl-card">
+            <h4>审批闸门（HITL）<span class="tl-tag">approval 表 · PAUSED</span></h4>
+            <p>执行前询问 <code>ApprovalGate</code>。命中 DANGEROUS 则创建审批单、任务转 <code>PAUSED_FOR_APPROVAL</code>，并裁剪尾部未配对的 assistant(toolCalls) 消息。人决策后：批准 → 按 (taskId, toolName, arguments) 匹配放行并续跑；驳回 → 任务终止且工具不执行。</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">7</div>
+          <div class="tl-card">
+            <h4>结果落库与审计 <span class="tl-tag">task_step / audit_log</span></h4>
+            <p>每步工具入参出参摘要写 <code>task_step</code>（含 seq 全序），上下文快照写 <code>task.context_messages</code>，动作写 <code>audit_log</code>（actor / action / detail jsonb）。全流程可回放。</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">8</div>
+          <div class="tl-card">
+            <h4>闭环回写与评测反馈 <span class="tl-tag">工单 / 知识库 / eval</span></h4>
+            <p>结论回写工单系统并沉淀进知识库；评测脚本统计命中率、轮数、Token、时延分位，结果回流为下一轮优化依据。<b>此段目前尚未实现</b>。</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub">5.1 阶段 3–6 的内部循环（Agent 迭代细节）</h3>
+      <p>阶段 3 到阶段 6 并非线性执行，而是一个<strong>感知—推理—行动—反馈</strong>的迭代环，直到模型输出纯文本作答，或触及步数 / 时长 / 循环上限：</p>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="card-t">迭代终止条件（三选一）</div>
+          <p style="font-size:13.5px;margin-bottom:0">① 模型输出纯文本 → <code>SUCCEEDED</code><br>
+          ② 步数 ≥ 10 或耗时 ≥ 60s → <code>MAX_STEPS</code> / <code>TIMEOUT</code><br>
+          ③ 同一「工具名 + 参数」连续出现 2 次 → <code>LOOP_DETECTED</code></p>
+        </div>
+        <div class="card">
+          <div class="card-t">异常出口</div>
+          <p style="font-size:13.5px;margin-bottom:0">需审批 → <code>PAUSED_FOR_APPROVAL</code>（可恢复）<br>
+          工具失败 → 三阶防护降级后继续<br>
+          未捕获异常 → <code>ERROR</code> + 审计留痕</p>
+        </div>
+      </div>
+
+      <h3 class="sub">5.2 数据落点分布</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th style="width:150px">数据表</th><th style="width:90px">所属域</th><th>记录内容</th></tr></thead>
+          <tbody>
+            <tr><td><code>task</code></td><td>orchestrator</td><td>任务主记录：prompt、status、pause_reason、result、steps、token_usage、context_messages（jsonb）</td></tr>
+            <tr><td><code>task_step</code></td><td>orchestrator</td><td>每一步的工具名、入参、结果状态与摘要，<code>unique(task_id, seq)</code> 保证全序</td></tr>
+            <tr><td><code>audit_log</code></td><td>orchestrator</td><td>谁、何时、做了什么，detail 为 jsonb</td></tr>
+            <tr><td><code>approval</code></td><td>orchestrator</td><td>审批单：工具名、入参、要求权限、状态、决策人与理由</td></tr>
+            <tr><td><code>eval_case</code></td><td>orchestrator</td><td>评测样本：输入、ground truth、判定规则</td></tr>
+            <tr><td><code>kb_doc</code> / <code>kb_chunk</code></td><td>rag</td><td>知识库文档与切片；chunk 含 <code>vector(1536)</code> 与 <code>tsvector</code> 双索引</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">共 7 张业务表，分布在两个 Flyway 迁移脚本（V1 orchestrator 域 / V2 rag 域）中，启动时由 gateway 合并扫描并按版本执行。<span class="bdg b-ok">已确认</span></p>
+    </section>
+
+    <!-- ============ §6 ============ -->
+    <section id="s6">
+      <div class="sec-head"><div class="sec-num">§6</div><h2 class="sec-title">目前开发了什么，架构是怎么样的，解决了什么问题</h2></div>
+      <p class="sec-lede">客观盘点：已完成 / 进行中 / 未开始，并说明每一项具体解决的工程问题。</p>
+
+      <h3 class="sub">6.1 里程碑进度</h3>
+      <div class="card">
+        <div class="ms">
+          <div class="ms-n">M0</div>
+          <div class="ms-b"><div class="ms-f" style="width:100%;background:var(--accent)"></div></div>
+          <div class="ms-l" style="color:var(--accent)">已完成</div>
+        </div>
+        <div class="ms">
+          <div class="ms-n">M1</div>
+          <div class="ms-b"><div class="ms-f" style="width:100%;background:var(--accent)"></div></div>
+          <div class="ms-l" style="color:var(--accent)">已完成 · v0.1.0</div>
+        </div>
+        <div class="ms">
+          <div class="ms-n">M2</div>
+          <div class="ms-b"><div class="ms-f" style="width:62%;background:linear-gradient(90deg,var(--accent),var(--amber))"></div></div>
+          <div class="ms-l" style="color:var(--amber)">后端完成 · 接口待接</div>
+        </div>
+        <div class="ms">
+          <div class="ms-n">M3</div>
+          <div class="ms-b"><div class="ms-f" style="width:0%"></div></div>
+          <div class="ms-l" style="color:var(--text-3)">未开始</div>
+        </div>
+        <div class="ms">
+          <div class="ms-n">M4</div>
+          <div class="ms-b"><div class="ms-f" style="width:0%"></div></div>
+          <div class="ms-l" style="color:var(--text-3)">未开始</div>
+        </div>
+      </div>
+      <p class="footnote">M2 细分：A1–A3（数据层）、B1–B3（harness 暂停恢复 SPI）、C1–C5（orchestrator 持久化与审批）、D1–D6（RAG 全链路）、E1（gateway 装配）均已完成；E2–E9（模型适配 / REST / 前端）与 F1–F6（评测 / 文档 / tag）待做。<span class="bdg b-ok">已确认</span></p>
+
+      <h3 class="sub">6.2 分层架构</h3>
+      <div class="layer" style="border-left:4px solid var(--violet)">
+        <div class="layer-h">接入层 · clawops-gateway</div>
+        <div class="layer-p">单端口 HTTP + WebSocket、鉴权、通道适配器、Webhook、REST/SSE 出口、Bean 装配</div>
+        <div class="chips">
+          <span class="chip vi">TaskController（待）</span><span class="chip vi">ApprovalController（待）</span>
+          <span class="chip vi">KbController（待）</span><span class="chip">ChatController ✓</span>
+          <span class="chip">HarnessConfig ✓</span><span class="chip">OrchestratorConfig ✓</span><span class="chip">RagConfig ✓</span>
+        </div>
+      </div>
+      <div class="layer" style="border-left:4px solid var(--primary)">
+        <div class="layer-h">编排层 · clawops-orchestrator</div>
+        <div class="layer-p">任务持久化、断点续跑、Checkpoint、审批状态机、审计写入</div>
+        <div class="chips">
+          <span class="chip hi">TaskRunner ✓</span><span class="chip hi">JpaTaskStore ✓</span>
+          <span class="chip hi">JdbcCheckpointStore ✓</span><span class="chip hi">JdbcApprovalStore ✓</span>
+          <span class="chip hi">ContextSnapshotCodec ✓</span><span class="chip hi">JdbcAuditWriter ✓</span>
+        </div>
+      </div>
+      <div class="layer" style="border-left:4px solid var(--accent)">
+        <div class="layer-h">内核层 · clawops-harness <span class="bdg b-ok">零第三方依赖</span></div>
+        <div class="layer-p">AgentLoop、ToolRegistry、Permission、Retry/CircuitBreaker、ContextManager、LoopGuard、Task SPI</div>
+        <div class="chips">
+          <span class="chip ac">AgentLoop ✓</span><span class="chip ac">ToolRegistry ✓</span>
+          <span class="chip ac">PermissionManager ✓</span><span class="chip ac">RetryExecutor ✓</span>
+          <span class="chip ac">CircuitBreaker ✓</span><span class="chip ac">ContextManager ✓</span>
+          <span class="chip ac">LoopGuard ✓</span><span class="chip ac">TaskStore SPI ✓</span>
+        </div>
+      </div>
+      <div class="layer" style="border-left:4px solid var(--amber)">
+        <div class="layer-h">能力层</div>
+        <div class="layer-p">rag（检索）/ connector（外部系统适配）/ skills（W4）/ mcp（W4）/ workers（W3）</div>
+        <div class="chips">
+          <span class="chip">rag ✓ 全链路</span><span class="chip">connector △ 仅 Metrics/Log</span>
+          <span class="chip">skills ✗</span><span class="chip">mcp ✗</span><span class="chip">workers ✗</span>
+        </div>
+      </div>
+      <div class="layer" style="border-left:4px solid var(--text-3)">
+        <div class="layer-h">外围 · cli / console-web / testbed</div>
+        <div class="layer-p">命令行（W3）、前端控制台（W2 静态页 / W4 Vue）、靶场（W3）</div>
+        <div class="chips">
+          <span class="chip">chat.html ✓</span><span class="chip">tasks.html ✗</span>
+          <span class="chip">kb.html ✗</span><span class="chip">testbed ✗</span>
+        </div>
+      </div>
+      <p class="footnote">图例：✓ 已落地　△ 部分落地　✗ 未落地</p>
+
+      <h3 class="sub">6.3 已完成内容清单（按 W2 计划编号）</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th style="width:78px">编号</th><th style="width:220px">内容</th><th style="width:86px">模块</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td class="num">A1 / A2</td><td>Flyway 迁移脚本 V1 / V2</td><td>orc / rag</td><td>按领域分模块存放，启动时合并扫描；各模块 IT 用 Flyway API 跑自身脚本</td></tr>
+            <tr><td class="num">A3</td><td>gateway 数据源与 Flyway</td><td>gateway</td><td>连 PG17+pgvector；<code>jpa.ddl-auto=validate</code></td></tr>
+            <tr><td class="num">B1</td><td>任务持久化 SPI</td><td>harness</td><td>TaskStore / CheckpointStore / ApprovalGate + TaskRecord / TaskState / StepCheckpoint 纯数据</td></tr>
+            <tr><td class="num">B2</td><td>上下文历史注入与裁剪</td><td>harness</td><td><code>withHistory()</code> + <code>trimUnresolvedToolCalls()</code></td></tr>
+            <tr><td class="num">B3</td><td>AgentLoop 暂停与恢复</td><td>harness</td><td>新增 <code>PAUSED_FOR_APPROVAL</code> 状态与 <code>paused()</code> 工厂</td></tr>
+            <tr><td class="num">C1</td><td>Task JPA + JpaTaskStore</td><td>orchestrator</td><td>SPI ↔ entity 映射，update 时做状态迁移校验</td></tr>
+            <tr><td class="num">C2</td><td>JdbcCheckpointStore + 审计</td><td>orchestrator</td><td>含 Jackson 上下文快照编解码，round-trip 有专项测试</td></tr>
+            <tr><td class="num">C3</td><td>审批状态机 + JdbcApprovalStore</td><td>orchestrator</td><td>非 PENDING 决策抛异常；重复决策落库不变</td></tr>
+            <tr><td class="num">C4</td><td>ResumableTaskRunner</td><td>orchestrator</td><td>编排核心；含 <code>TaskResumeIT</code> 跨进程续跑验证</td></tr>
+            <tr><td class="num">C5</td><td>orchestrator ArchUnit + 门槛</td><td>orchestrator</td><td>覆盖率 0.50 → 0.70 冻结</td></tr>
+            <tr><td class="num">D1–D3</td><td>切分 / 中文分词 / 文档解析</td><td>rag</td><td>Chunker、CjkBigramTokenizer、md/txt/pdf 解析器</td></tr>
+            <tr><td class="num">D4</td><td>PgVectorStore</td><td>rag</td><td>纯 JDBC 参数化，含向量与全文双路检索</td></tr>
+            <tr><td class="num">D5</td><td>HybridRetriever + RRF</td><td>rag</td><td>应用层 RRF 融合，来源标记 vector/fulltext/hybrid</td></tr>
+            <tr><td class="num">D6</td><td>RagService + 引用溯源</td><td>rag</td><td>ingest / retrieve 编排，引用字段供前端跳转</td></tr>
+            <tr><td class="num">E1</td><td>gateway Bean 装配</td><td>gateway</td><td>RagConfig / OrchestratorConfig；扩展组件扫描路径</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub">6.3b 代码规模与质量状态</h3>
+      <div class="grid4">
+        <div class="stat"><div class="stat-v">91</div><div class="stat-k">主源码 Java 文件</div></div>
+        <div class="stat"><div class="stat-v acc">48</div><div class="stat-k">测试 Java 文件<br>（含 13 个 IT）</div></div>
+        <div class="stat"><div class="stat-v vio">6</div><div class="stat-k">CI 门禁阶段<br>（fail-fast）</div></div>
+        <div class="stat"><div class="stat-v amb">0.80</div><div class="stat-k">harness 覆盖率门槛<br>（Jacoco 强制）</div></div>
+      </div>
+      <div class="note n-info" style="margin-top:16px">
+        <div class="note-t">◆ 覆盖率门槛矩阵（CI 强制 · 只升不降）</div>
+        <p>harness <b>0.80</b>　｜　orchestrator <b>0.70</b>　｜　workers <b>0.70</b>　｜　rag <b>0.65</b>　｜　connector <b>0.65</b>　｜　gateway <b>0.60</b>　｜　skills / mcp <b>0.60</b>　｜　cli 不设线（以 E2E 冒烟为准）。下调须走 ADR。</p>
+      </div>
+
+      <h3 class="sub">6.4 具体解决了哪些工程问题</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th style="width:190px">问题</th><th style="width:230px">解法</th><th style="width:96px">状态</th><th>证据</th></tr></thead>
+          <tbody>
+            <tr><td>Agent 内核与 AI 框架耦合，框架不可替换、内核不可独立测试</td><td>harness 纯自研 + 自研 SPI；LangChain4j 仅作适配层</td><td><span class="bdg b-ok">已解决</span></td><td>ADR-001 + ArchUnit 硬规则</td></tr>
+            <tr><td>HITL 审批后恢复破坏消息配对，续跑失败</td><td>trim 尾部未配对 toolCalls + ApprovedCallGate 按参数放行</td><td><span class="bdg b-ok">已解决</span></td><td>ADR-008 + <code>AgentLoopApprovalTest</code></td></tr>
+            <tr><td>长任务进程重启即丢失上下文与进度</td><td>每步 Checkpoint + 上下文快照落库 + resume 重建</td><td><span class="bdg b-ok">已解决</span></td><td><code>TaskResumeIT</code> 跨进程续跑</td></tr>
+            <tr><td>工具调用失败导致整个任务崩溃</td><td>三阶防护：校验 → 退避重试 → 熔断/降级/转人工</td><td><span class="bdg b-ok">已解决</span></td><td><code>RetryExecutorTest</code> + CircuitBreaker</td></tr>
+            <tr><td>模型陷入重复工具调用，成本失控</td><td>步数上限 + 时长上限 + 重复动作检测（连续 2 次）</td><td><span class="bdg b-ok">已解决</span></td><td><code>LoopGuardTest</code></td></tr>
+            <tr><td>长对话 Prompt Token 膨胀</td><td>阈值触发窗口压缩，保留目标与关键事实</td><td><span class="bdg b-ok">已解决</span></td><td><b>实测</b> 1697 → 512</td></tr>
+            <tr><td>PG 全文检索对中文语料失效</td><td>应用层 CJK bigram 分词后写 tsvector + GIN</td><td><span class="bdg b-ok">已解决</span></td><td><code>CjkBigramTokenizerTest</code> + <code>PgVectorStoreIT</code></td></tr>
+            <tr><td>RAG 回答不可溯源，运维场景不敢信</td><td>RetrievedChunk 强制携带 docTitle / seq / source</td><td><span class="bdg b-ok">已解决</span></td><td><code>RagServiceIT</code></td></tr>
+            <tr><td>Agent 系统难以确定性测试</td><td>FakeChatModel 可编程队列 + 测试金字塔 + 覆盖率门禁</td><td><span class="bdg b-ok">已解决</span></td><td><code>conventions/testing.md</code></td></tr>
+            <tr><td>AI 静默修改对外接口</td><td>OpenAPI 产物入仓 + CI 重新生成后 diff 校验</td><td><span class="bdg b-ok">已解决</span></td><td><code>conventions/api.md §6</code></td></tr>
+            <tr><td>数据库技术栈不受控</td><td>CI grep 红线：禁止 MySQL 家族，命中即失败，禁白名单豁免</td><td><span class="bdg b-ok">已解决</span></td><td><code>quality-gates.md §5</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub">6.5 尚未解决 / 待交付</h3>
+      <div class="grid2">
+        <div class="card" style="border-left:4px solid var(--amber)">
+          <div class="card-t">W2 剩余（E2–E9）</div>
+          <p style="font-size:13.5px;margin-bottom:0">LangChain4j 模型适配（条件双轨）、任务 / 审批 / 知识库三组 REST、SSE 事件扩展（<code>approval_required</code>）、<code>knowledge.search</code> 工具、openapi.json 重新生成、前端三页（tasks / kb / chat 审批卡片）、gateway ArchUnit + 覆盖率 0.60。</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--red)">
+          <div class="card-t">W3–W4（未开始）</div>
+          <p style="font-size:13.5px;margin-bottom:0">IM 通道适配器、告警 Webhook、Connector 剩余三类（Ticket / CMDB / Change）、靶场两服务与 Mock 运维系统、F1~F5 故障注入、Redis Stream 异步长任务与死信、Cron 巡检、CLI、Skills、自研 MCP Server、Compose 上线 + HTTPS、<b>≥30 条样本评测报告</b>。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ §7 ============ -->
+    <section id="s7">
+      <div class="sec-head"><div class="sec-num">§7</div><h2 class="sec-title">采购视角的评估结论</h2></div>
+      <p class="sec-lede">针对「企业信息系统运营优化」这一采购目的，给出优势、风险与建议的落地路径。</p>
+
+      <h3 class="sub">7.1 契合度判断</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th style="width:170px">采购需求</th><th style="width:96px">契合度</th><th>依据</th></tr></thead>
+          <tbody>
+            <tr><td>跨系统信息自动关联</td><td><span class="bdg b-ok">高</span></td><td>Connector 五类抽象 + 统一工具注册表，异构系统归一为可调用工具</td></tr>
+            <tr><td>降低故障定位时间</td><td><span class="bdg b-ok">高</span></td><td>工具并行调用 + RAG 检索历史复盘，直击最耗时环节</td></tr>
+            <tr><td>数据不出内网 / 自托管</td><td><span class="bdg b-ok">高</span></td><td>Compose 自托管；仅模型与向量走外部 API</td></tr>
+            <tr><td>操作可审计、风险可控</td><td><span class="bdg b-ok">高</span></td><td>三级权限 + HITL 强制审批 + audit_log 全链路留痕</td></tr>
+            <tr><td>低硬件 / 许可成本</td><td><span class="bdg b-ok">高</span></td><td>2C4G 可运行，月 API 预算 ≤¥100</td></tr>
+            <tr><td>已有量化收益证明</td><td><span class="bdg b-no">低</span></td><td>指标登记表空白，评测集与靶场均未建立</td></tr>
+            <tr><td>生产级 SLA / 运维支持</td><td><span class="bdg b-no">低</span></td><td>个人作品集项目，无 SLA 承诺与商业支持</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub">7.2 主要风险与缓释</h3>
+      <div class="grid2">
+        <div class="card" style="border-left:4px solid var(--red)">
+          <div class="card-t">风险 1　收益未经验证</div>
+          <p style="font-size:13.5px;margin-bottom:0"><b>缓释</b>　以「只读接入 + 人工复核」方式做 2~4 周 POC，用本企业真实告警样本对比人工基线，自行产出 ROI 数据。项目已备好评测框架（<code>eval_case</code> 表 + <code>eval run</code> 命令），可直接复用。</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--amber)">
+          <div class="card-t">风险 2　接口层与前端尚未完成</div>
+          <p style="font-size:13.5px;margin-bottom:0"><b>缓释</b>　后端核心（持久化 / 断点续跑 / 审批 / RAG）已就绪且有测试覆盖；剩余为 REST 暴露与页面，属确定性工作量，可评估排期后再决策。</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--amber)">
+          <div class="card-t">风险 3　单人项目的人员依赖</div>
+          <p style="font-size:13.5px;margin-bottom:0"><b>缓释</b>　项目以「规约驱动」弥补：ADR 决策记录、ArchUnit 机器化架构校验、覆盖率门禁、OpenAPI 契约 diff、AI 生成留档（<code>docs/ai-log/</code>）。这些机制显著降低了新人接手的认知成本。</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--primary)">
+          <div class="card-t">风险 4　模型 API 的外部依赖</div>
+          <p style="font-size:13.5px;margin-bottom:0"><b>缓释</b>　适配器隔离 + 双轨装配（有 key 走 OpenAI 兼容接口，无 key 走 Fake），切换模型供应商不触及内核；成本侧有调用计数与配额熔断。</p>
+        </div>
+      </div>
+
+      <h3 class="sub">7.3 建议的推进路径</h3>
+      <div class="tl">
+        <div class="tl-item"><div class="tl-dot">①</div><div class="tl-card">
+          <h4>先问一个问题：要的是"产品"还是"架构参考"？</h4>
+          <p>若需要可直接采购的成熟产品，ClawOps 目前不满足——它是作品集项目，无 SLA、无客户案例。若需要一套<b>经过工程验证的 Agent 平台架构</b>作为自研或二次开发的起点，它的完成度与规约严谨度相当有价值。</p>
+        </div></div>
+        <div class="tl-item a"><div class="tl-dot">②</div><div class="tl-card">
+          <h4>用只读接入做低成本 POC</h4>
+          <p>只接指标与日志两类只读数据源，不开放任何写权限。此时已能验证核心价值：Agent 能否正确关联多源数据并给出可用根因。门槛低、内部审批阻力小。</p>
+        </div></div>
+        <div class="tl-item v"><div class="tl-dot">③</div><div class="tl-card">
+          <h4>补齐接口层并接入本企业系统</h4>
+          <p>完成 E3–E6 的 REST 与工具封装，按 Connector 接口实现本企业的指标 / 日志 / 工单适配器。这部分是标准的 Spring 开发工作，风险可控。</p>
+        </div></div>
+        <div class="tl-item"><div class="tl-dot">④</div><div class="tl-card">
+          <h4>用本企业样本产出实测报告</h4>
+          <p>复用 <code>eval_case</code> 表与 <code>eval run</code>，灌入本企业真实故障样本与 ground truth，产出属于本企业的根因命中率、轮数、Token、时延分位数据——<b>这才是能支撑采购决策的数字</b>。</p>
+        </div></div>
+      </div>
+
+      <div class="note n-key">
+        <div class="note-t">✓ 总结陈词</div>
+        <p>ClawOps 是一个<strong>架构判断成熟、工程纪律严格</strong>的 Agent 平台：它把「人机协同」「断点续跑」「降级不崩溃」「可审计」这些运维场景的刚需做成了机制，并用 CI 门禁把架构原则固化下来，这一点比多数同类项目更扎实。</p>
+        <p style="margin-bottom:0">但它<strong>尚未跨越从"机制建成"到"效果验证"的鸿沟</strong>。对采购方而言，合理的姿态是：<strong>认可其架构价值，但坚持用本企业的样本跑出属于本企业的数字，再决定是否投入。</strong></p>
+      </div>
+    </section>
+
+    <!-- ============ APPENDIX ============ -->
+    <section id="appendix">
+      <div class="sec-head"><div class="sec-num">A</div><h2 class="sec-title">附录 · 术语与数据来源</h2></div>
+
+      <h3 class="sub">A.1 术语表</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th style="width:150px">术语</th><th>含义</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Harness</strong></td><td>Agent 运行时内核，负责循环、工具注册、上下文、权限、重试等；本项目自研，不依赖 AI 框架</td></tr>
+            <tr><td><strong>AgentLoop</strong></td><td>感知—推理—行动—反馈的迭代循环，含步数与时长上限</td></tr>
+            <tr><td><strong>HITL</strong></td><td>Human-in-the-Loop，人工介入；本项目指高危动作的强制审批闸门</td></tr>
+            <tr><td><strong>Checkpoint</strong></td><td>每一步工具调用的入参出参摘要与上下文快照，用于断点恢复与审计回放</td></tr>
+            <tr><td><strong>RAG</strong></td><td>检索增强生成：先检索知识库片段，再让模型基于片段作答</td></tr>
+            <tr><td><strong>RRF</strong></td><td>倒数排名融合，本项目用于合并向量检索与全文检索两路结果</td></tr>
+            <tr><td><strong>CJK bigram</strong></td><td>中文分词方案：连续汉字两两滑动成词组，解决 PG simple 分析器不支持中文的问题</td></tr>
+            <tr><td><strong>pgvector / HNSW</strong></td><td>PostgreSQL 向量扩展与近似最近邻索引，本项目用余弦距离算子</td></tr>
+            <tr><td><strong>Connector</strong></td><td>外部信息系统适配层，抽象为 Metrics / Log / Ticket / CMDB / Change 五类接口</td></tr>
+            <tr><td><strong>MCP</strong></td><td>Model Context Protocol，模型上下文协议，用于标准化接入外部工具（W3 计划）</td></tr>
+            <tr><td><strong>ADR</strong></td><td>Architecture Decision Record，架构决策记录；本项目要求任何偏离任务书的决定先记 ADR 再改代码</td></tr>
+            <tr><td><strong>靶场 / Testbed</strong></td><td>用于评测的可控故障环境：模拟业务服务 + Mock 运维系统 + 故障注入脚本（W3）</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub">A.2 数据来源索引</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th style="width:290px">来源</th><th>用于支撑</th></tr></thead>
+          <tbody>
+            <tr><td><code>docs/TASK_BOOK.md</code> v1.2</td><td>§1 定位、§3 技术选型、§4 评测计划、§6 里程碑</td></tr>
+            <tr><td><code>docs/PROGRESS.md</code></td><td>§6 进度状态、指标登记表（空白）、问题与阻塞日志</td></tr>
+            <tr><td><code>docs/adr/ADR-000</code></td><td>§3 版本锁定（JDK 25 / Boot 4.1.1 / LC4j 1.20.2）</td></tr>
+            <tr><td><code>docs/adr/ADR-001</code></td><td>§3 创新①内核与框架边界</td></tr>
+            <tr><td><code>docs/adr/ADR-002</code></td><td>§3 创新⑦上下文压缩</td></tr>
+            <tr><td><code>docs/adr/ADR-007</code></td><td>§6 开发环境与部署约定</td></tr>
+            <tr><td><code>docs/metrics/w1-context-compression.md</code></td><td>§4.1 唯一实测数据（1697 → 512）</td></tr>
+            <tr><td><code>docs/conventions/testing.md</code></td><td>§3.2 创新⑦测试策略、覆盖率矩阵</td></tr>
+            <tr><td><code>docs/conventions/quality-gates.md</code></td><td>§6.3 CI 七阶段门禁、ArchUnit 规则、MySQL 红线</td></tr>
+            <tr><td><code>docs/conventions/api.md</code></td><td>§3.2 创新⑤错误码语义、SSE/WS 契约</td></tr>
+            <tr><td><code>docs/plans/2026-10-20-w2-persistence-rag.md</code></td><td>§2.3 接入机制、§6 DDL 与 REST 契约、剩余交付项</td></tr>
+            <tr><td><code>deploy/docker-compose.dev.yml</code></td><td>§3.1 中间件版本与资源约束</td></tr>
+            <tr><td>本次独立复核</td><td>12 模块 compile BUILD SUCCESS（0 Checkstyle 违规）、文件统计、Git 标签</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="footer">
+      <b>ClawOps 产品技术评估报告</b>　·　面向企业信息系统运营优化的采购技术尽调<br>
+      报告生成日期：2026-10-20　|　评估基准：Git <code>v0.1.0</code> + W2 未提交工作区（A1–E1 完成）<br>
+      <b>举证声明：</b>本报告中标注 <span class="bdg b-ok">已确认</span> 的内容均有仓库内代码、测试、配置或实测数据支撑，并已由本次评估独立复核；标注 <span class="bdg b-est">推断</span> 的内容为基于架构机制与工程经验的定性判断，<b>未经实测</b>；标注 <span class="bdg b-no">未落地</span> 的内容属路线图计划，当前代码库中不存在。<br>
+      <b>重要提示：</b>§4 中除上下文压缩外的所有数字均为预计区间，<b>不得用于投资回报测算或合同指标约定</b>。真实数据需待项目 W3 建立靶场、W4 运行 ≥30 条样本评测后产出。
+    </div>
+
+  </div>
+  </main>
+</div>
+
+</body>
+</html>
